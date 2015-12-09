@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
+  <url>
+    <loc>http://mkitby.com/2015/12/08/raspberry-pi-nas-file-sharing/</loc>
+    <lastmod>2015-12-09T13:03:54.844Z</lastmod>
+    <data>
+        <display>
+        <title>Raspberry Pi从零开始搭建低成本NAS(6)-文件共享</title>
+        <pubTime>2015-12-08T13:40:27.000Z</pubTime>
+        
+        <tag>DIY</tag>
+         
+        <tag>NAS</tag>
+         
+        <tag>Raspberry Pi</tag>
+         
+        <tag>samba</tag>
+         
+        <tag>web file server</tag>
+         
+        <tag>树莓派</tag>
+         
+         
+           
+             
+              <breadCrumb title="Raspberry Pi" url="http://mkitby.com/categories/Raspberry-Pi/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/</loc>
+    <lastmod>2015-12-09T12:56:55.616Z</lastmod>
+    <data>
+        <display>
+        <title>Raspberry Pi从零开始搭建低成本NAS(5)-UPNP/DLNA多媒体</title>
+        <pubTime>2015-11-09T12:46:36.000Z</pubTime>
+        
+        <tag>DIY</tag>
+         
+        <tag>NAS</tag>
+         
+        <tag>Raspberry Pi</tag>
+         
+        <tag>树莓派</tag>
+         
+         
+           
+             
+              <breadCrumb title="Raspberry Pi" url="http://mkitby.com/categories/Raspberry-Pi/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://mkitby.com/2015/11/05/raspberry-pi-nas-hw-assembly/</loc>
+    <lastmod>2015-12-09T12:56:54.542Z</lastmod>
+    <data>
+        <display>
+        <title>Raspberry Pi从零开始搭建低成本NAS(2)-硬件组装</title>
+        <pubTime>2015-11-05T14:04:14.000Z</pubTime>
+        
+        <tag>DIY</tag>
+         
+        <tag>NAS</tag>
+         
+        <tag>Raspberry Pi</tag>
+         
+        <tag>树莓派</tag>
+         
+         
+           
+             
+              <breadCrumb title="Raspberry Pi" url="http://mkitby.com/categories/Raspberry-Pi/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://mkitby.com/2015/11/05/raspberry-pi-nas-storage-device/</loc>
+    <lastmod>2015-12-09T12:56:52.233Z</lastmod>
+    <data>
+        <display>
+        <title>Raspberry Pi从零开始搭建低成本NAS(4)-存储设备</title>
+        <pubTime>2015-11-05T14:06:01.000Z</pubTime>
+        
+        <tag>DIY</tag>
+         
+        <tag>NAS</tag>
+         
+        <tag>Raspberry Pi</tag>
+         
+        <tag>树莓派</tag>
+         
+         
+           
+             
+              <breadCrumb title="Raspberry Pi" url="http://mkitby.com/categories/Raspberry-Pi/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/</loc>
+    <lastmod>2015-12-09T12:56:50.513Z</lastmod>
+    <data>
+        <display>
+        <title>Raspberry Pi从零开始搭建低成本NAS(3)-系统安装</title>
+        <pubTime>2015-11-05T14:05:49.000Z</pubTime>
+        
+        <tag>DIY</tag>
+         
+        <tag>NAS</tag>
+         
+        <tag>Raspberry Pi</tag>
+         
+        <tag>树莓派</tag>
+         
+         
+           
+             
+              <breadCrumb title="Raspberry Pi" url="http://mkitby.com/categories/Raspberry-Pi/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://mkitby.com/2015/11/05/raspberry-pi-nas-starting/</loc>
+    <lastmod>2015-12-09T12:56:49.552Z</lastmod>
+    <data>
+        <display>
+        <title>Raspberry Pi从零开始搭建低成本NAS(1)-开篇</title>
+        <pubTime>2015-11-05T11:38:37.000Z</pubTime>
+        
+        <tag>DIY</tag>
+         
+        <tag>NAS</tag>
+         
+        <tag>Raspberry Pi</tag>
+         
+        <tag>树莓派</tag>
+         
+         
+           
+             
+              <breadCrumb title="Raspberry Pi" url="http://mkitby.com/categories/Raspberry-Pi/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+    
+    
+</urlset>

@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[mkitby's Blog]]></title>
+  
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://mkitby.com/"/>
+  <updated>2015-12-09T13:03:54.844Z</updated>
+  <id>http://mkitby.com/</id>
+  
+  <author>
+    <name><![CDATA[mkitby]]></name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Raspberry Pi从零开始搭建低成本NAS(6)-文件共享]]></title>
+    <link href="http://mkitby.com/2015/12/08/raspberry-pi-nas-file-sharing/"/>
+    <id>http://mkitby.com/2015/12/08/raspberry-pi-nas-file-sharing/</id>
+    <published>2015-12-08T13:40:27.000Z</published>
+    <updated>2015-12-09T13:03:54.844Z</updated>
+    <content type="html"><![CDATA[<p>为了方便访问树莓派的存储设备，有必要为其添加文件共享，下面为给出三种文件访问方法：samba, ftp, web file server</p>
+<a id="more"></a>
+<h1 id="Samba">Samba</h1><p>安装samba所需软件<br>sudo apt-get install samba samba-common-bin –y</p>
+<p>先备份，然后编辑/etc/samba/smb.conf文件</p>
+<pre><code>sudo cp /etc/samba/smb<span class="class">.conf</span> /etc/samba/smb<span class="class">.conf</span><span class="class">.orig</span>
+sudo vim /etc/samba/smb.conf
+</code></pre><p>创建shares文件夹</p>
+<pre><code>mkdir <span class="regexp">/home/</span>pi<span class="regexp">/nas-data/</span>DLNA<span class="regexp">/shares</span>
+</code></pre><p>需要修改添加的内容如下，</p>
+<pre><code>[global]
+<span class="constant">security</span> = user
+encrypt passwords = true
+guest account = nobody
+map to guest = bad user
+
+<span class="comment">#======================= Share Definitions =======================</span>
+[share]
+<span class="constant">comment</span> = Guest access shares
+<span class="constant">path</span> = /home/pi/nas-data/shares
+<span class="constant">browseable</span> = yes
+<span class="constant">writable</span> = yes
+<span class="comment">#read only = yes</span>
+guest ok = yes
+<span class="constant">public</span> = yes
+
+[NAS-Data]
+<span class="constant">comment</span> = Nas data folder
+<span class="constant">path</span> = /home/pi/nas-data/
+<span class="constant">browseable</span> = yes
+<span class="constant">writable</span> = yes
+valid users = root pi
+
+[USBHDD]
+<span class="constant">comment</span> = Media folder
+<span class="constant">path</span> = /home/pi/usbhdd
+<span class="constant">browseable</span> = yes
+<span class="constant">writable</span> = yes
+valid users = root pi
+</code></pre><p>share共享目录访问不需要密码，而NAS-Data, USBHDD访问需要验证，用户为root和pi。</p>
+<p>最后重启samba服务。然后同一局域网的其他设备就可以访问RPi的共享目录</p>
+<pre><code><span class="title">sudo</span> service samba restart
+</code></pre><p>Android可以使用ES File Explorer，IOS可以使用FileExplorer, FileBrowser, Documents和Remote File Free，或其他支持访问共享的文件管理器。</p>
+<h1 id="FTP">FTP</h1><p>安装vsftp，开源的轻量级的常用ftp服务器</p>
+<pre><code>sudo apt-<span class="keyword">get</span> install vsftpd
+</code></pre><p>先备份，然后编辑配置文件,</p>
+<pre><code>sudo cp /etc/vsftpd<span class="class">.conf</span> /etc/vsftpd<span class="class">.conf</span><span class="class">.orig</span>
+sudo vim /etc/vsftpd.conf
+</code></pre><p>vsftp的配置文件，它允许你设置所有类型的限制和策略，目前没有深入研究，修改如下</p>
+<pre><code><span class="comment"># 不允许匿名访问</span>
+<span class="setting">anonymous_enable=<span class="value"><span class="keyword">NO</span></span></span>
+<span class="comment"># 设定可以进行写操作</span>
+<span class="setting">write_enable=<span class="value"><span class="keyword">YES</span></span></span>
+<span class="comment"># 设定本地用户可以访问</span>
+<span class="setting">local_enable=<span class="value"><span class="keyword">YES</span></span></span>
+</code></pre><p>重启vsftpd服务</p>
+<pre><code><span class="title">sudo</span> service vsftpd restart
+</code></pre><p>通过ftp连接树莓派系统，以用户名pi登录，密码是pi用户的密码。ftp的根目录是/home/pi，即pi用户的HOME目录，可上传或下载文件了。</p>
+<h1 id="Web_File_Server">Web File Server</h1><p>通过http访问文件，采用python SimpleHTTPServer实现，性能上肯定比不上专业的web服务器软件，但是简单够用。</p>
+<p>首先创建脚本httpFileServer.py,</p>
+<pre><code>sudo <span class="keyword">vim</span> /home/pi/httpFileServer.<span class="keyword">py</span>
+</code></pre><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line">#-*- coding:utf-8 -*-</span><br><span class="line"></span><br><span class="line">import os</span><br><span class="line">import posixpath</span><br><span class="line">import urllib</span><br><span class="line">import BaseHTTPServer</span><br><span class="line">from SimpleHTTPServer import SimpleHTTPRequestHandler</span><br><span class="line"></span><br><span class="line"># modify this to add additional routes</span><br><span class="line">ROUTES = (</span><br><span class="line">    # [url_prefix ,  directory_path]</span><br><span class="line">    ['/dlna', '/home/pi/nas-data/DLNA'],</span><br><span class="line">    ['', '/home/pi/usbhdd]  # empty string for the 'default' match</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">class RequestHandler(SimpleHTTPRequestHandler):</span><br><span class="line"></span><br><span class="line">    def translate_path(self, path):</span><br><span class="line">        """translate path given routes"""</span><br><span class="line"></span><br><span class="line">        # set default root to cwd</span><br><span class="line">        root = os.getcwd()</span><br><span class="line"></span><br><span class="line">        # look up routes and set root directory accordingly</span><br><span class="line">        for pattern, rootdir in ROUTES:</span><br><span class="line">            if path.startswith(pattern):</span><br><span class="line">                # found match!</span><br><span class="line">                path = path[len(pattern):]  # consume path up to pattern len</span><br><span class="line">                root = rootdir</span><br><span class="line">                break</span><br><span class="line"></span><br><span class="line">        # normalize path and prepend root directory</span><br><span class="line">        path = path.split('?',1)[0]</span><br><span class="line">        path = path.split('#',1)[0]</span><br><span class="line">        path = posixpath.normpath(urllib.unquote(path))</span><br><span class="line">        words = path.split('/')</span><br><span class="line">        words = filter(None, words)</span><br><span class="line"></span><br><span class="line">        path = root</span><br><span class="line">        for word in words:</span><br><span class="line">            drive, word = os.path.splitdrive(word)</span><br><span class="line">            head, word = os.path.split(word)</span><br><span class="line">            if word in (os.curdir, os.pardir):</span><br><span class="line">                continue</span><br><span class="line">            path = os.path.join(path, word)</span><br><span class="line"></span><br><span class="line">        return path</span><br><span class="line"></span><br><span class="line">if __name__ == '__main__':</span><br><span class="line">    BaseHTTPServer.test(RequestHandler, BaseHTTPServer.HTTPServer)</span><br></pre></td></tr></table></figure>
+<p>创建服务，</p>
+<pre><code>sudo vim <span class="regexp">/etc/i</span>nit.d<span class="regexp">/hfs</span>
+</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line"><span class="comment"># /etc/init.d/hfs</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### BEGIN INIT INFO</span></span><br><span class="line"><span class="comment"># Provides: hfs</span></span><br><span class="line"><span class="comment"># Required-Start:    $network $local_fs $remote_fs</span></span><br><span class="line"><span class="comment"># Required-Stop:     $network $local_fs $remote_fs</span></span><br><span class="line"><span class="comment"># Default-Start:     2 3 4 5</span></span><br><span class="line"><span class="comment"># Default-Stop:      0 1 6</span></span><br><span class="line"><span class="comment"># Short-Description: Http file server init script.</span></span><br><span class="line"><span class="comment"># Description: Starts and stops http file services.</span></span><br><span class="line"><span class="comment">### END INIT INFO</span></span><br><span class="line"></span><br><span class="line">WWW_PORT=<span class="string">'80'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="variable">$1</span> <span class="keyword">in</span></span><br><span class="line">    start)</span><br><span class="line">        nohup python /home/pi/httpFileServer.py <span class="variable">$WWW_PORT</span> &gt;&gt; /tmp/nohup.log <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br><span class="line">        sleep <span class="number">2</span></span><br><span class="line">        <span class="built_in">stat</span>=`netstat -tlpn | grep <span class="variable">$WWW_PORT</span> | grep <span class="string">"python"</span> | cut <span class="operator">-d</span><span class="string">":"</span> <span class="operator">-f</span>2 | cut <span class="operator">-d</span><span class="string">" "</span> <span class="operator">-f</span>1`</span><br><span class="line">        <span class="keyword">if</span> [ <span class="variable">$WWW_PORT</span> <span class="operator">-eq</span> <span class="variable">$stat</span> ]; <span class="keyword">then</span></span><br><span class="line">            sock=`netstat -tlpn | grep <span class="variable">$WWW_PORT</span> | grep <span class="string">"python"</span>`</span><br><span class="line">            <span class="built_in">echo</span> <span class="string">"Server is running:\n<span class="variable">$sock</span>"</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="built_in">echo</span> <span class="string">"Server is stopped"</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">        ;;</span><br><span class="line"></span><br><span class="line">    stop)</span><br><span class="line">        pid=`ps ax | grep <span class="string">"/home/pi/httpFileServer.py <span class="variable">$WWW_PORT</span>"</span>| awk <span class="string">'&#123;print $1&#125;'</span>`</span><br><span class="line">        <span class="built_in">kill</span> -<span class="number">9</span> <span class="variable">$pid</span> <span class="number">2</span>&gt;/dev/null</span><br><span class="line">        rm <span class="operator">-f</span> /tmp/nohup.log</span><br><span class="line">        <span class="built_in">stat</span>=`netstat -tlpn | grep <span class="variable">$WWW_PORT</span> | grep <span class="string">"python"</span>| cut <span class="operator">-d</span><span class="string">":"</span> <span class="operator">-f</span>2 | cut <span class="operator">-d</span><span class="string">" "</span> <span class="operator">-f</span>1`</span><br><span class="line">        <span class="keyword">if</span> [ <span class="variable">$WWW_PORT</span> <span class="operator">-eq</span> <span class="variable">$stat</span> ]; <span class="keyword">then</span></span><br><span class="line">            sock=`netstat -tlpn | grep <span class="variable">$WWW_PORT</span> | grep <span class="string">"python"</span>`</span><br><span class="line">            <span class="built_in">echo</span> <span class="string">"Server is  still running:\n<span class="variable">$sock</span>"</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="built_in">echo</span> <span class="string">"Server has stopped"</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">        ;;</span><br><span class="line"></span><br><span class="line">    status)</span><br><span class="line">        <span class="built_in">stat</span>=`netstat -tlpn |grep <span class="variable">$WWW_PORT</span>| grep <span class="string">"python"</span> | cut <span class="operator">-d</span><span class="string">":"</span> <span class="operator">-f</span>2 | cut <span class="operator">-d</span><span class="string">" "</span> <span class="operator">-f</span>1`</span><br><span class="line">        <span class="keyword">if</span> [ <span class="variable">$WWW_PORT</span> <span class="operator">-eq</span> <span class="variable">$stat</span> ]; <span class="keyword">then</span></span><br><span class="line">            sock=`netstat -tlpn | grep <span class="variable">$WWW_PORT</span> | grep <span class="string">"python"</span>`</span><br><span class="line">            <span class="built_in">echo</span> <span class="string">"Server is running:\n<span class="variable">$sock</span>"</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="built_in">echo</span> <span class="string">"Server is stopped"</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">        ;;</span><br><span class="line">        *)</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Use <span class="variable">$0</span> start|stop|status"</span></span><br><span class="line">        <span class="built_in">exit</span> <span class="number">1</span></span><br><span class="line">        ;;</span><br><span class="line"><span class="keyword">esac</span></span><br><span class="line"><span class="built_in">exit</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>添加可执行权限</p>
+<pre><code>sudo chmod +x <span class="regexp">/etc/i</span>nit.d<span class="regexp">/hfs</span>
+</code></pre><p>然后更新rc，添加自启动服务</p>
+<pre><code>sudo <span class="operator"><span class="keyword">update</span>-rc.<span class="keyword">d</span> hfs <span class="keyword">defaults</span></span>
+</code></pre><p>启动服务，</p>
+<pre><code>sudo service hfs <span class="literal">start</span>
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<p>为了方便访问树莓派的存储设备，有必要为其添加文件共享，下面为给出三种文件访问方法：samba, ftp, web file server</p>]]>
+    
+    </summary>
+    
+      <category term="DIY" scheme="http://mkitby.com/tags/DIY/"/>
+    
+      <category term="NAS" scheme="http://mkitby.com/tags/NAS/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/tags/Raspberry-Pi/"/>
+    
+      <category term="samba" scheme="http://mkitby.com/tags/samba/"/>
+    
+      <category term="web file server" scheme="http://mkitby.com/tags/web-file-server/"/>
+    
+      <category term="树莓派" scheme="http://mkitby.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/categories/Raspberry-Pi/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Raspberry Pi从零开始搭建低成本NAS(5)-UPNP/DLNA多媒体]]></title>
+    <link href="http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/"/>
+    <id>http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/</id>
+    <published>2015-11-09T12:46:36.000Z</published>
+    <updated>2015-12-09T12:56:55.616Z</updated>
+    <content type="html"><![CDATA[<p>说到RPi上的DNLA，就不得不说下MiniDLNA，网上资料教程最多的就是它了，我自己用的也是它。后面我会介绍用plex来搭建流媒体服务，它的功能更加强大，支持在线转码，缺点就是其专用客户端需要收费，树莓派跑起来比较占资源。其实有很多软件可以用来搭建流媒体服务，下面两个网站有关于这方面的详细信息，有兴趣可以参考，</p>
+<a id="more"></a>
+<p><a href="https://en.wikipedia.org/wiki/Comparison_of_UPnP_AV_media_servers/" target="_blank" rel="external">https://en.wikipedia.org/wiki/Comparison_of_UPnP_AV_media_servers/</a><br><a href="https://en.wikipedia.org/wiki/List_of_UPnP_AV_media_servers_and_clients/" target="_blank" rel="external">https://en.wikipedia.org/wiki/List_of_UPnP_AV_media_servers_and_clients/</a></p>
+<h1 id="miniDLNA">miniDLNA</h1><h2 id="安装miniDLNA">安装miniDLNA</h2><p>如果采用<code>sudo apt-get install miniDLNA</code>，可能安装的不是最新版本，并且miniDLNA默认是不支持rmvb格式的视频，所以我们最好自己下载源代码，只需要做很少改动就可以支持rmvb，然后编译安装。<br>如果已经安装Raspbian仓库的miniDLNA，需要先移除</p>
+<pre><code>sudo apt-<span class="built_in">get</span> purge minidlna -<span class="keyword">y</span>
+sudo apt-<span class="built_in">get</span> <span class="built_in">remove</span> minidlna
+sudo apt-<span class="built_in">get</span> autoremove -<span class="keyword">y</span>
+</code></pre><p>然后安装miniDLNA所依赖的包</p>
+<pre><code><span class="label">sudo</span> apt-<span class="preprocessor">get</span> <span class="keyword">build-dep </span>minidlna -y
+</code></pre><p>如果提示出错，可以手动安装</p>
+<pre><code>sudo apt-<span class="built_in">get</span> install libjpeg-<span class="built_in">dev</span> libsqlite3-<span class="built_in">dev</span> libexif-<span class="built_in">dev</span> libid3tag0-<span class="built_in">dev</span> libvorbis-<span class="built_in">dev</span> libflac-<span class="built_in">dev</span> libavformat-<span class="built_in">dev</span> libavcodec-<span class="built_in">dev</span> –y
+</code></pre><p>安装编译相关工具</p>
+<pre><code>sudo apt-get <span class="operator"><span class="keyword">install</span> autoconf automake autopoint <span class="keyword">build</span>-essential</span>
+</code></pre><p>下载miniDLNA源代码,目前最新的是1.1.5版</p>
+<pre><code>wget http:<span class="comment">//sourceforge.net/projects/minidlna/files/minidlna/1.1.5/minidlna-1.1.5.tar.gz</span>
+tar -xvf minidlna-<span class="number">1.1</span><span class="number">.5</span>.tar.gz
+cd minidlna-<span class="number">1.1</span><span class="number">.5</span>
+</code></pre><p>修改源代码支持rmvb/rm</p>
+<pre><code><span class="preprocessor">## metadata.c</span>
+<span class="comment">//line 840</span>
+<span class="keyword">else</span> <span class="keyword">if</span>( <span class="built_in">strncmp</span>(ctx-&gt;iformatctx-&gt;name, <span class="string">"matroska"</span>, <span class="number">8</span>) == <span class="number">0</span> )
+    xasprintf(&amp;m.mime, <span class="string">"video/x-matroska"</span>);
+<span class="keyword">else</span> <span class="keyword">if</span>( <span class="built_in">strcmp</span>(ctx-&gt;iformatctx-&gt;name, <span class="string">"flv"</span>) == <span class="number">0</span> )
+    xasprintf(&amp;m.mime, <span class="string">"video/x-flv"</span>);
+<span class="comment">//----add----</span>
+<span class="keyword">else</span> <span class="keyword">if</span>( <span class="built_in">strcmp</span>(ctx-&gt;iformat-&gt;name, <span class="string">"rm"</span>) == <span class="number">0</span> )
+    xasprintf(&amp;m.mime, <span class="string">"video/x-pn-realvideo"</span>);
+<span class="keyword">else</span> <span class="keyword">if</span>( <span class="built_in">strcmp</span>(ctx-&gt;iformat-&gt;name, <span class="string">"rmvb"</span>) == <span class="number">0</span> )
+    xasprintf(&amp;m.mime, <span class="string">"video/x-pn-realvideo"</span>);
+<span class="comment">//---end----</span>
+<span class="keyword">if</span>( m.mime )
+    <span class="keyword">goto</span> video_nodlna;
+
+<span class="preprocessor">## upnpglobalvars.h</span>
+<span class="comment">// Line 169</span>
+    <span class="string">"http-get:*:audio/mp4:*,"</span> \
+    <span class="string">"http-get:*:audio/x-wav:*,"</span> \
+    <span class="string">"http-get:*:audio/x-flac:*,"</span> \
+    <span class="string">"http-get:*:application/ogg:*,"</span> \
+    <span class="string">"http-get:*:video/x-pn-realvideo:*"</span> <span class="comment">// Add this</span>
+
+<span class="preprocessor">#<span class="keyword">define</span> DLNA_FLAG_DLNA_V1_5      <span class="number">0x00100000</span></span>
+<span class="preprocessor">#<span class="keyword">define</span> DLNA_FLAG_HTTP_STALLING  <span class="number">0x00200000</span></span>
+
+
+<span class="preprocessor">## utils.c</span>
+<span class="comment">//line 381</span>
+        ends_with(file, <span class="string">".m2t"</span>) || ends_with(file, <span class="string">".mkv"</span>)   ||
+        ends_with(file, <span class="string">".vob"</span>) || ends_with(file, <span class="string">".ts"</span>)    ||
+        ends_with(file, <span class="string">".flv"</span>) || ends_with(file, <span class="string">".xvid"</span>)  ||
+<span class="comment">//----add----</span>
+        ends_with(file, <span class="string">".rm"</span>)  || ends_with(file, <span class="string">".rmvb"</span>)  ||
+<span class="comment">//----end----</span>
+<span class="preprocessor">#<span class="keyword">ifdef</span> TIVO_SUPPORT</span>
+        ends_with(file, <span class="string">".TiVo"</span>) ||
+<span class="preprocessor">#<span class="keyword">endif</span></span>
+        ends_with(file, <span class="string">".mov"</span>) || ends_with(file, <span class="string">".3gp"</span>));
+</code></pre><p>配置，编译和安装miniDLNA，大概需要5分钟完成</p>
+<pre><code>./configure &amp;&amp; <span class="built_in">make</span> &amp;&amp; sudo <span class="built_in">make</span> install
+</code></pre><p>复制默认配置文件</p>
+<pre><code>sudo cp minidlna<span class="class">.conf</span> /etc/
+</code></pre><p>复制启动脚本，来自动启动miniDLNA.</p>
+<pre><code>sudo cp linux/minidlna<span class="class">.init</span><span class="class">.d</span><span class="class">.script</span> /etc/init.d/minidlna
+</code></pre><p>为启动脚本添加执行权限</p>
+<pre><code>sudo chmod +x <span class="regexp">/etc/i</span>nit.d<span class="regexp">/minidlna</span>
+</code></pre><p>然后更新rc，添加自启动服务</p>
+<pre><code>sudo <span class="operator"><span class="keyword">update</span>-rc.<span class="keyword">d</span> minidlna <span class="keyword">defaults</span></span>
+</code></pre><p>先备份然后编辑配置文件</p>
+<pre><code>sudo cp /etc/minidlna<span class="class">.conf</span> /etc/minidlna<span class="class">.conf</span><span class="class">.orig</span>
+sudo vim /etc/minidlna.conf
+</code></pre><p>修改如下设置</p>
+<pre><code>media_dir=<span class="regexp">/home/pi</span><span class="regexp">/nas-data/</span><span class="constant">DLNA</span>
+media_dir=<span class="regexp">/home/pi</span><span class="regexp">/usbhdd/usbhdd</span>1
+media_dir=<span class="regexp">/home/pi</span><span class="regexp">/usbhdd/usbhdd</span>2
+
+db_dir=<span class="regexp">/home/pi</span><span class="regexp">/nas-data/</span><span class="constant">DLNA</span>/db
+log_dir=<span class="regexp">/home/pi</span><span class="regexp">/nas-data/</span><span class="constant">DLNA</span>/log
+
+friendly_name=<span class="constant">RasPi</span> <span class="constant">DLNA</span> <span class="constant">Server</span>
+</code></pre><p>创建文件夹</p>
+<pre><code><span class="title">mkdir</span> /home/pi/nas-<span class="typedef"><span class="keyword">data</span>/<span class="type">DLNA</span></span>
+<span class="title">mkdir</span> /home/pi/nas-<span class="typedef"><span class="keyword">data</span>/<span class="type">DLNA</span>/<span class="container">{<span class="type">Music</span>,<span class="type">Pictures</span>,<span class="type">Videos</span>,<span class="title">db</span>,<span class="title">log</span>}</span></span>
+</code></pre><p>最后重启miniDLNA服务</p>
+<pre><code><span class="title">sudo</span> service minidlna restart
+</code></pre><p>打开计算机网络，可以看到RasPi DLNA Server媒体设备，如图Figure 1所示。同时如果是使用Windows 10（win7没有，win8没测试过），在我的电脑-&gt;网络位置还会显示RasPi DLNA Server，如图Figure 2所示,这一点配合WMP比较有用，正好弥补了WMP的不足，后面会有详细介绍。</p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure1.jpg_mkitby" alt=""><br>Figure 1. 树莓派DLNA<br></div>
+
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure2.jpg_mkitby" alt=""><br>Figure 2. 网络位置DLNA Server<br></div>
+
+<h2 id="MP3中文名称乱码">MP3中文名称乱码</h2><p>用Windows Media Player(后面用WMP替代)查看minidlna多媒体服务器文件，有些中文文件名显示乱码，有些就正常。目前Linux中流行的很多播放器经常不能正确显示如歌曲名、专辑名等MP3 tag信息，经过有些工具转换后，标签又不能被Windows识别。MP3的歌曲名、艺术家、专辑名等信息都以一定的编码格式存储在MP3标签中。简单地说，乱码出现的原因就是播放器未能准确识别出MP3标签的中文编码格式。</p>
+<p>具体的说，现在MP3文件的标签主要有几种标准：ID3v1、ID3v2（现在常见的又分为2.3和2.4）、APEv2。可以从两个角度解决这个问题。一是转换已有MP3文件的标签编码，二是使用支持GBK编码的播放软件,这种方案我没试过。</p>
+<p>mp3tagiconv是一款可用于解决MP3乱码问题的软件。它可以自动探测MP3标签的编码，并以合理的方式重新写入，经过其处理的编码可被Linux、Windows（包括Windows Media Player）和各种移动设备正确识别。<br>mp3tagiconv 需要 mutagen 的支持，确保之前已经安装。</p>
+<pre><code><span class="comment"># The script depends on mutagen to run. Please install it from the repository of your distribution (in Ubuntu: python-mutagen).</span>
+sudo apt-get install python-mutagen
+git <span class="keyword">clone</span> <span class="title">https</span>://github.com/cxcxcxcx/mp3tagiconv.git
+</code></pre><blockquote>
+<p>Usage：<br>For mp3 files with Chinese tags(we first try gbk, then utf8), ID3v2 tags which are already encoded in unicode will not be affected:<br>mp3tagiconv a.mp3<br>You can use -e to specify the encoding used if the tag is stored by latin-1. The program will guess your encoding according to your list:<br>mp3tagiconv -e gbk,utf8 b.mp3<br>If you don’t want to confirm for every file(not recommended):<br>mp3tagiconv –do-update *.mp3</p>
+</blockquote>
+<h1 id="Plex_Media_Server">Plex Media Server</h1><p>下载plex media server deb安装包</p>
+<pre><code>sudo wget <span class="string">https:</span><span class="comment">//dev2day.de/plex-latest</span>
+</code></pre><p>等待下载完成。</p>
+<p>安装deb包</p>
+<pre><code>sudo dpkg -<span class="tag">i</span> plex*
+</code></pre><p>安装转码(transcoding)所需要的软件</p>
+<pre><code>sudo apt-<span class="keyword">get</span> install mkvtoolnix libexpat1 ffmpeg -y
+</code></pre><p>等待安装完成。</p>
+<p>重启plex media server服务</p>
+<pre><code><span class="title">sudo</span> service plexmediaserver restart
+</code></pre><p>访问Plex Media Server WebGUI, 用浏览器访问<a href="http://192.168.1.118:32400/web" target="_blank" rel="external">http://192.168.1.118:32400/web</a>， 192.168.1.118为RPi的IP地址<br>大概会弹出一个对话框，在页面右上角（如图Figure 3）点agree，之后进入主页，</p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure3.jpg_mkitby" alt=""><br>Figure 3. 主页右上角部分<br></div><br>然后点击页面右上角的扳手图标进入设置页面，如图Figure 4，点击右上角Web，然后在最左边选择General，先设置语言为中文，点最下面的SAVE CHANGES按钮，然后刷新，界面会马上切换为中文。<br><div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure4.jpg_mkitby" alt=""><br>Figure 4. 设置页面<br></div><br>这里面有很多设置选项，我也不一一讲，下面只列出我认为比较重要的设置，<br>1.    播放器设置，如图Figure 5，在这里面可以设置流媒体质量、分辨率、音量和字幕等，可以根据实际需要做修改，另外右上角可以打开高级选项，我暂时没有做任何改动，全部默认。<br><div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure5.jpg_mkitby" alt=""><br>Figure 5. 播放器设置界面<br></div><br>2.    服务器—&gt;资料库，勾选“自动更新我的资料库”和“定期更新我的媒体库”，如图Figure 6所示。<br><div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure6.jpg_mkitby" alt=""><br>Figure 6. 资料库设置<br></div><br>3. 最后讲如何添加多媒体资料，在主页左上角点击+号，或弹出如图Figure 7所示界面，然后就可以尽情添加你想要的资料了。<br><div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure7.jpg_mkitby" alt=""><br>Figure 7. 添加资料库<br></div>
+
+<h1 id="DLNA_client选择">DLNA client选择</h1><p>下面主要列出Windows，Android，IOS平台，我测试过的，其他平台linux，mac留给你们测了。</p>
+<h2 id="跨平台Kodi(XMBC)">跨平台Kodi(XMBC)</h2><p>Kodi就是大名鼎鼎的XBMC，一款功能强大的重量级播放器，支持Windows, Linux, Mac OS, IOS, Android全平台。但是我认为这家伙最适合在大屏幕的播放设备，支持遥控器，作为家庭影院终端播放器比较多。手机，电脑我个人感觉操作不是很方便，必须要全屏。</p>
+<h2 id="Windows平台">Windows平台</h2><p>Windows平台推荐用VLC或者WMP，VLC可以比较好地支持miniDLNA，有个问题就是默认设置播放视频时，中文名字的视频在VLC中显示小方块也就是乱码，字幕也是，需要需改设置，打开VLC后点击“工具”-&gt;“首选项”-&gt;“字幕和OSD”-&gt;“字体”右侧下拉菜单选择“MingLiU”保存后重启播放器即可。测试发现Windows 7系统下还可以选择以下字体：PMingLiU, DFKai-SB, Microsoft JhengHei, MingLiU_HKSCS。Windows XP系统下还可以选择以下字体：PMingLiU, 宋体, 黑体, 新宋体。</p>
+<p>WMP也可以支持miniDLNA，但是不能显示文件夹，所有内容都只能显示在一起，这点比较可惜，另外WMP支持格式有限，需要安装外部解码包，推荐K-Lite Codec Pack。在windows 10上，在网络位置会显示DLNA服务器，打开之后，选择需要播放的文件，右键-&gt;打开方式-&gt;Windows Media Player，然后就可以直接播放了，如果选择其他播放器打开会显示下载进度条，目前发现只有WMP支持直接播放。如果谁发现其他播放器，请告诉我。</p>
+<h2 id="Android平台">Android平台</h2><p>Android平台有很多选择， BubbleUPNP, MediaHouse等。BubbleUPNP功能强大，支持作为DLNA server，mediahouse功能专一，专门用作client，但是他们都需要外挂播放器。外挂播放器推荐VLC for android或者MX Player，其中MX Player有些视频会出现声音画面不同步的现象，这点很可惜，不知道后面版本会不会解决，但VLC目前测试下来还没有发现这个问题。所以在Android上面，我主要使用VLC作为外挂播放器。</p>
+<h2 id="IOS平台">IOS平台</h2><p>IOS平台不像Android平台那样，有那么多免费的软件可以选择，目前免费的好像就是 Moli Player，收费的有AV Player, GoodPlayer, AcePlayer等。</p>
+<h1 id="参考">参考</h1><p><a href="http://skypegnu1.blog.51cto.com/8991766/1654186" target="_blank" rel="external">http://skypegnu1.blog.51cto.com/8991766/1654186</a><br><a href="http://www.htpcguides.com/install-readymedia-minidlna-1-1-4-raspberry-pi/" target="_blank" rel="external">http://www.htpcguides.com/install-readymedia-minidlna-1-1-4-raspberry-pi/</a><br><a href="http://linux-wiki.cn/wiki/Mp3标签乱码问题分析与解决方案" target="_blank" rel="external">http://linux-wiki.cn/wiki/Mp3标签乱码问题分析与解决方案</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>说到RPi上的DNLA，就不得不说下MiniDLNA，网上资料教程最多的就是它了，我自己用的也是它。后面我会介绍用plex来搭建流媒体服务，它的功能更加强大，支持在线转码，缺点就是其专用客户端需要收费，树莓派跑起来比较占资源。其实有很多软件可以用来搭建流媒体服务，下面两个网站有关于这方面的详细信息，有兴趣可以参考，</p>]]>
+    
+    </summary>
+    
+      <category term="DIY" scheme="http://mkitby.com/tags/DIY/"/>
+    
+      <category term="NAS" scheme="http://mkitby.com/tags/NAS/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/tags/Raspberry-Pi/"/>
+    
+      <category term="树莓派" scheme="http://mkitby.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/categories/Raspberry-Pi/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Raspberry Pi从零开始搭建低成本NAS(4)-存储设备]]></title>
+    <link href="http://mkitby.com/2015/11/05/raspberry-pi-nas-storage-device/"/>
+    <id>http://mkitby.com/2015/11/05/raspberry-pi-nas-storage-device/</id>
+    <published>2015-11-05T14:06:01.000Z</published>
+    <updated>2015-12-09T12:56:52.233Z</updated>
+    <content type="html"><![CDATA[<p>准备一块硬盘，以及一个移动硬盘盒（支持2.5/3.5寸的硬盘，以及外接供电）把硬盘分区，并格式化为ext4 格式，这样性能更好，寿命应该更长(待考证)。</p>
+<p>由于RPi的USB口供电能力有限，所以移动硬盘需要外部供电Table 1是官方给出的数据(<a href="https://www.raspberrypi.org/help/faqs/#power" target="_blank" rel="external">https://www.raspberrypi.org/help/faqs/#power</a>) ， 可以看到Raspberry Pi 2 Model B USB最大供电电流为600mA/1.2A(可切换)，注意这是4个USB口总共加一起的最大电流。如果我们把电流改成1.2A，那么理论上带一个移动硬盘应该没有问题。但是请注意：进入网页在表格的下面有一段，我摘抄出来。</p>
+<a id="more"></a>
+<blockquote>
+<p>The Raspberry Pi model B+ and 2B can supply 600mA/1.2A to downstream USB peripherals, switchable by a firmware setting. This allows the vast majority of USB devices to be connected directly to these models, assuming the upstream power supply has sufficient available current. <strong>Very high-current devices or devices can draw a surge current such as certain 3G modems and USB hard disks will still require an external powered USB hub.</strong></p>
+</blockquote>
+<div align="center"><br>Table 1. 各种版本的供电参数<br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-storage-device/table1.jpg_mkitby" alt=""><br></div>
+
+<p>注意粗体句子，意思是说虽然电流够了，但是像3G模块和USB移动硬盘需要较高电流或者会产生浪涌电流的设备仍然需要外部带供电的USB集线器。所以为了设备安全最好按照官方的建议做。</p>
+<p>实在是嫌麻烦或者不怕死的，比如像我这样的，嘿嘿，可以裸接2.5寸移动硬盘，但为了保险期间，就不要再接什么其它USB设备了，比如无线网卡（类似于3G模块）、鼠标、键盘等。</p>
+<p>所以根据上面的分析对于想外接移动硬盘的人来说，有以下两种解决方案：</p>
+<ol>
+<li>直接用RPi给2.5寸移动硬盘供电<br>郑重声明：请考虑清楚是否一定要采用这种方式，自己评估风险（出现任何烧机，损坏，移动硬盘挂掉等任何硬件故障），出现一切问题自己负责，别哭着找我啊，我可不赔。</li>
+<li>用带电源的USB集线器，USB集线器接上电源，然后连接上RPi的USB口，移动电源接到USB集线器上。USB集线器一定要选择质量信得过的牌子，供电能力足够的，带过流保护功能，如此一来就可以连接多个移动硬盘，比如接两个移动硬盘，其中一个用来做数据备份。</li>
+</ol>
+<p>由于我暂时没有USB集线器，所以下面我以第一种方案为例进行测试，我这边有一个2.5寸1T移动硬盘和1个64G U盘。先把U盘格式化为ext4格式，移动硬盘之前有两个分区，一个FAT32，一个exFAT，由于我移动硬盘有其他用途，我就不格式化为ext4。但建议大家可以弄个专用的移动硬盘，然后格式化为ext4格式，这样好折腾，你想想，每天不关机，还要远程下载等等，U盘什么的经不起这么玩。</p>
+<p>首先编辑/boot/config.txt，先备份，</p>
+<pre><code>sudo cp /boot/config<span class="class">.txt</span> /boot/config<span class="class">.txt</span><span class="class">.orig</span>
+sudo vim /boot/config.txt
+</code></pre><p>在文件末尾加上这行max_usb_current=1，把最大电流切换到1.2 A，关机，断电，插上USB移动硬盘和U盘，上电启动。然后登录SSH，查看磁盘信息， <code>sudo fdisk –l</code>，如果没有问题的话，会显示，</p>
+<pre><code>… …
+Disk /dev/sda: 62.9 GB, 62914560000 bytes
+… …
+
+   Device Boot      <span class="operator"><span class="keyword">Start</span>         <span class="keyword">End</span>      Blocks   <span class="keyword">Id</span>  <span class="keyword">System</span>
+/dev/sda1            <span class="number">2048</span>   <span class="number">122879999</span>    <span class="number">61438976</span>   <span class="number">83</span>  Linux
+
+Disk /dev/sdb: <span class="number">1000.2</span> GB, <span class="number">1000204886016</span> <span class="keyword">bytes</span>
+… …
+
+   Device Boot      <span class="keyword">Start</span>         <span class="keyword">End</span>      Blocks   <span class="keyword">Id</span>  <span class="keyword">System</span>
+/dev/sdb1              <span class="number">63</span>   <span class="number">976760030</span>   <span class="number">488379984</span>    <span class="keyword">c</span>  W95 FAT32 (LBA)
+<span class="keyword">Partition</span> <span class="number">1</span> does <span class="keyword">not</span> <span class="keyword">start</span> <span class="keyword">on</span> <span class="keyword">physical</span> sector boundary.
+/dev/sdb2       <span class="number">976760160</span>  <span class="number">1953520063</span>   <span class="number">488379952</span>    <span class="number">7</span>  HPFS/NTFS/exFAT</span>
+</code></pre><p>可以看到，/dev/sda为64G U盘，只有一个分区/dev/sda1，/dev/sdb为1T移动硬盘，有两个分区/dev/sdb1(FAT32)和/dev/sdb2(exFAT)。如果看不到移动硬盘，进行以下操作：</p>
+<p>先安装git</p>
+<pre><code>sudo apt-<span class="keyword">get</span> install git-core –y
+</code></pre><p>克隆Wiring Pi</p>
+<pre><code>sudo git <span class="keyword">clone</span> <span class="title">git</span>://git.drogon.net/wiringPi
+</code></pre><p>进入Wiring Pi文件夹，开始编译</p>
+<pre><code><span class="built_in">cd</span> wiringPi &amp;&amp; sudo ./build
+</code></pre><p>检查GPIO 38 Pin 电平</p>
+<pre><code>gpio –<span class="keyword">g</span> <span class="keyword">read</span> 38
+</code></pre><p>应该返回1，表示高电平，如果返回0表示低电平，我们需要让pin脚输出高电平</p>
+<pre><code>gpio -g write <span class="number">38</span> <span class="number">1</span>
+</code></pre><p>然后再检测一遍，如果还有问题，那我也没办法， 老老实实接USB集线器。</p>
+<p>成功识别到硬盘后，可以查询文件系统类型、LABEL、UUID等信息</p>
+<pre><code><span class="title">sudo</span> blkid
+</code></pre><p>会显示，</p>
+<pre><code><span class="regexp">/dev/</span><span class="string">mmcblk0p1:</span> SEC_TYPE=<span class="string">"msdos"</span> LABEL=<span class="string">"boot"</span> UUID=<span class="string">"15CD-3B79"</span> TYPE=<span class="string">"vfat"</span>
+<span class="regexp">/dev/</span><span class="string">mmcblk0p2:</span> UUID=<span class="string">"13d368bf-6dbf-4751-8ba1-88bed06bef77"</span> TYPE=<span class="string">"ext4"</span>
+<span class="regexp">/dev/</span><span class="string">sda1:</span> UUID=<span class="string">"7e623443-f19a-4564-8e60-e9d2170ac32a"</span> TYPE=<span class="string">"ext4"</span>
+<span class="regexp">/dev/</span><span class="string">sdb1:</span> LABEL=<span class="string">"COLORSPACE"</span> UUID=<span class="string">"F8E6-4FDB"</span> TYPE=<span class="string">"vfat"</span>
+<span class="regexp">/dev/</span><span class="string">sdb2:</span> UUID=<span class="string">"3007-F316"</span> TYPE=<span class="string">"exfat"</span>
+</code></pre><p>Raspbian默认不支持exFAT，需要安装exfat-fuse</p>
+<pre><code>sudo apt-<span class="keyword">get</span> install exfat-fuse -y
+</code></pre><p>再就是设置自动挂载，需要编辑/etc/fstab，先备份，</p>
+<pre><code>sudo cp <span class="regexp">/etc/</span>fstab <span class="regexp">/etc/</span>fstab.orig
+sudo vim <span class="regexp">/etc/</span>fstab
+</code></pre><p>在文件最后加上下面几行内容，</p>
+<pre><code>UUID=F8E6-<span class="number">4F</span>DB /home/pi/usbhdd/usbhdd1  vfat   defaults,noatime,umask=<span class="number">0000</span>,utf8=<span class="number">1</span>  <span class="number">0</span>   <span class="number">0</span>
+UUID=<span class="number">3007</span>-F316 /home/pi/usbhdd/usbhdd2  exfat  defaults,noatime,umask=<span class="number">0000</span>         <span class="number">0</span>   <span class="number">0</span>
+/dev/sda1      /home/pi/nas-data        ext4   defaults,noatime                    <span class="number">0</span>   <span class="number">0</span>
+</code></pre><p>如果出现中文乱码，需要加参数utf8=1，保存，最后重启。关于/etc/fstab，可以参考<a href="https://wiki.archlinux.org/index.php/Fstab" target="_blank" rel="external">https://wiki.archlinux.org/index.php/Fstab</a></p>
+<p>创建挂载目录</p>
+<pre><code>mkdir <span class="regexp">/home/</span>pi/usbhdd
+mkdir <span class="regexp">/home/</span>pi<span class="regexp">/usbhdd/</span>usbhdd1
+mkdir <span class="regexp">/home/</span>pi<span class="regexp">/usbhdd/</span>usbhdd2
+mkdir <span class="regexp">/home/</span>pi/nas-data
+</code></pre><p>重启</p>
+<pre><code><span class="title">sudo</span> reboot
+</code></pre><p>重新登录SSH，查看挂载信息</p>
+<pre><code>sudo mount <span class="operator">-l</span>
+</code></pre><p>会显示，</p>
+<pre><code>… …
+/dev/sdb1 on /home/pi/usbhdd/usbhdd1 <span class="typedef"><span class="keyword">type</span> vfat <span class="container">(… …)</span></span>
+/dev/sdb2 on /home/pi/usbhdd/usbhdd2 <span class="typedef"><span class="keyword">type</span> fuseblk <span class="container">(… …)</span></span>
+/dev/sda1 on /home/pi/nas-<span class="typedef"><span class="keyword">data</span> <span class="keyword">type</span> ext4 <span class="container">(… …)</span></span>
+</code></pre><p>或者输入命令</p>
+<pre><code><span class="title">sudo</span> df -h
+</code></pre><p>会显示，</p>
+<pre><code>Filesystem      Size  Used Avail Use% Mounted on
+rootfs           <span class="number">15</span>G  <span class="number">3.0</span>G   <span class="number">11</span>G  <span class="number">22</span>% /
+/dev/root        <span class="number">15</span>G  <span class="number">3.0</span>G   <span class="number">11</span>G  <span class="number">22</span>% /
+devtmpfs        <span class="number">460</span>M     <span class="number">0</span>  <span class="number">460</span>M   <span class="number">0</span>% /dev
+tmpfs            <span class="number">93</span>M  <span class="number">388</span>K   <span class="number">93</span>M   <span class="number">1</span>% /run
+tmpfs           <span class="number">5.0</span>M     <span class="number">0</span>  <span class="number">5.0</span>M   <span class="number">0</span>% /run/lock
+tmpfs           <span class="number">186</span>M  <span class="number">4.0</span>K  <span class="number">186</span>M   <span class="number">1</span>% /run/shm
+/dev/mmcblk0p1   <span class="number">56</span>M   <span class="number">19</span>M   <span class="number">37</span>M  <span class="number">34</span>% /boot
+/dev/sdb1       <span class="number">466</span>G  <span class="number">447</span>G   <span class="number">19</span>G  <span class="number">96</span>% /home/pi/usbhdd/usbhdd1
+/dev/sdb2       <span class="number">466</span>G  <span class="number">457</span>G  <span class="number">9.1</span>G  <span class="number">99</span>% /home/pi/usnhdd/usbhdd2
+</code></pre><p>表明全部挂载成功。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>准备一块硬盘，以及一个移动硬盘盒（支持2.5/3.5寸的硬盘，以及外接供电）把硬盘分区，并格式化为ext4 格式，这样性能更好，寿命应该更长(待考证)。</p>
+<p>由于RPi的USB口供电能力有限，所以移动硬盘需要外部供电Table 1是官方给出的数据(<a href="https://www.raspberrypi.org/help/faqs/#power">https://www.raspberrypi.org/help/faqs/#power</a>) ， 可以看到Raspberry Pi 2 Model B USB最大供电电流为600mA/1.2A(可切换)，注意这是4个USB口总共加一起的最大电流。如果我们把电流改成1.2A，那么理论上带一个移动硬盘应该没有问题。但是请注意：进入网页在表格的下面有一段，我摘抄出来。</p>]]>
+    
+    </summary>
+    
+      <category term="DIY" scheme="http://mkitby.com/tags/DIY/"/>
+    
+      <category term="NAS" scheme="http://mkitby.com/tags/NAS/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/tags/Raspberry-Pi/"/>
+    
+      <category term="树莓派" scheme="http://mkitby.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/categories/Raspberry-Pi/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Raspberry Pi从零开始搭建低成本NAS(3)-系统安装]]></title>
+    <link href="http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/"/>
+    <id>http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/</id>
+    <published>2015-11-05T14:05:49.000Z</published>
+    <updated>2015-12-09T12:56:50.513Z</updated>
+    <content type="html"><![CDATA[<h1 id="安装操作系统">安装操作系统</h1><p>在<a href="https://www.raspberrypi.org/downloads/" target="_blank" rel="external">https://www.raspberrypi.org/downloads/</a> 下载Raspbian操作系统，下载完成后解压缩得到镜像文件(.img)，然后我们需要一个工具把镜像文件烧录到SD卡上， 我知道有两款工具，Win32DiskImager，USB Image Tool，另外这两款工具还可以备份整个SD卡为一个镜像文件。下面以Win32DiskImager为例说明如何烧录，如图Figure 1所示。</p>
+<ul>
+<li>把micro SD card插入读卡器中，连接上电脑. 等电脑识别后会分配一个盘符(例如G:)</li>
+<li>从<a href="http://sourceforge.net/projects/win32diskimager/" target="_blank" rel="external">http://sourceforge.net/projects/win32diskimager/</a> 下载 Win32DiskImager， 然后安装</li>
+<li>安装完成后以系统管理员权限运行</li>
+<li>选择之前解压缩得到的镜像文件，选择SD卡所在盘符</li>
+<li>点击Write按钮开始写入镜像文件，然后就是等待，完成后会弹出提示框</li>
+</ul>
+<a id="more"></a>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure1.jpg_mkitby" alt=""><br>Figure 1. Win32DiskImager烧录<br></div>
+
+<p>如何英文还可以，也可以直接参考官方文档：<br><a href="https://www.raspberrypi.org/documentation/installation/installing-images/windows.md" target="_blank" rel="external">https://www.raspberrypi.org/documentation/installation/installing-images/windows.md</a></p>
+<h1 id="登录SSH">登录SSH</h1><p>把micro SD card 插入Raspberry Pi，插上网线，连到路由器，然后上电。由于我们没有键盘和显示器，所以需要用SSH登录RPi(Raspberry Pi缩写)，默认登陆用户名/密码：pi / raspberry。 但是不知道IP地址怎么办？其实我们可以从路由器设置里面得到IP地址。下面以TP-LINK为例，其他路由器类似。 进入路由器设置—&gt;DHCP服务器—&gt;客户端列表，就可以得到RPi的IP地址，如图Figure 2所示。然后最好绑定RPi的IP和MAC，进入路由器设置—&gt;DHCP服务器—&gt;静态地址保留，然后在设置里面，添加树莓派IP地址192.168.1.118和MAC地址。以后树莓派每次启动，IP地址都会固定为192.168.1.118。当然也可以设置RPi为静态IP地址，这个我们后面再讲。</p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure2.jpg_mkitby" alt=""><br>Figure 2. 路由器设置界面<br></div>
+
+<p>接下来用SSH客户端(Puty, SecureCRT, XShell等) 登录RPi，我这里以XShell(官网<a href="https://www.netsarang.com/" target="_blank" rel="external">https://www.netsarang.com/</a> )为例,</p>
+<ul>
+<li>先去官网下载安装</li>
+<li>运行XShell，会弹出会话对话框，如图Figure 3所示， 点击“新建”按钮，会弹出如图Figure 4所示对话框，“名称”输入Raspberry Pi(或者其它任何你想要的名字)，“主机”输入之前获得的IP地址，其它默认，点击确定，然后会回到如图Figure 3。</li>
+</ul>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure3.jpg_mkitby" alt=""><br>Figure 3. XShell运行开始界面<br></div>
+
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure4.jpg_mkitby" alt=""><br>Figure 4. 新建会话属性对话框<br></div>
+
+<ul>
+<li>点击“连接”按钮，出现如图Figure 5所示界面， 输入pi，勾选“记住用户名”复选框，点击“确定”按钮，弹出如图Figure 6所示对话框，输入密码raspberry，勾选“记住密码”复选框，点击“确定”按钮。</li>
+</ul>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure5.jpg_mkitby" alt=""><br>Figure 5. SSH用户名<br></div>
+
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure6.jpg_mkitby" alt=""><br>Figure 6. SSH用户身份验证<br></div>
+
+<ul>
+<li>以上所有步骤都没有问题的话，恭喜你，成功登录SSH。以后所有的操作基本上全是通过SSH来完成。</li>
+</ul>
+<h1 id="系统配置">系统配置</h1><h2 id="raspi-config配置">raspi-config配置</h2><p>接下来就是进行系统的一些基本配置，输入，</p>
+<pre><code><span class="title">sudo</span> raspi-config
+</code></pre><p>这里面可以进行一些系统相关设置，如图Figure 7所示，我们主要设置以下方面：</p>
+<ul>
+<li>选择Expand Filesystem，然后把整个系统的可用空间扩展到储存卡的大小。</li>
+<li>选择Change User Password设置新密码，按提示步骤完成</li>
+<li>选择Internationalisation Options—&gt;Change Timezone设置时区，在中国大陆，选择Asia—&gt;Chongqing(或者Hong_Kong)都可以</li>
+<li>按’Tab键，选中&lt;Finish&gt;，回车，提示Reboot(重启)，选&lt;Yes&gt;，回车，RPi就会重启，SSH会自动断开连接，然后重新连接SSH，记得输入你设置的新密码。</li>
+</ul>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure7.jpg_mkitby" alt=""><br>Figure 7. raspi-config命令配置界面<br></div>
+
+<p>其他一些选项，我反正是没设置，保持默认，想折腾的可以试试，比如Overclock(超频)。</p>
+<p>Tips :</p>
+<ul>
+<li>输入命令时，按<code>TAB</code>键可以自动完成</li>
+<li><code>sudo</code> 临时用root权限运行命令</li>
+<li>用命令设置用户密码：<code>passwd</code> 用户名，比如设置pi密码，<code>passwd pi</code></li>
+<li>启用root账户，输入<code>sudo passwd root</code>,设置 root 账号的密码，会让你输入两次新密码。输入<code>sudo passwd --unlock root</code>,启用 root 账号登录。建议不要用root账户登录，而采用下面su命令</li>
+<li><p>切换到某一用户，<code>su - 用户名</code>，注意-前后各有一个空格，切换到root输入<code>su – root</code></p>
+</li>
+<li><p>某个命令不会用，可以输入<code>命令 --help</code>或者<code>man</code>。例如 <code>passwd –help</code>, <code>man passwd</code></p>
+</li>
+<li>man命令快捷键，e—向下滚动，y—向上滚动，q—退出，h—查看帮助</li>
+</ul>
+<h2 id="网卡设置">网卡设置</h2><p>我们可以选择有线网卡或者购买无线网卡。如果树莓派主要用来做服务器，就像本文那样，建议使用有线网卡，原因有两点，第一信号稳定，网络质量有保证；第二点减小USB耗电，为后面挂载移动硬盘提供有利条件，具体后面会讲。</p>
+<h3 id="有线网卡">有线网卡</h3><p>设置静态IP地址，如果前面绑定过IP地址和MAC地址，那么这一步可以选择跳过。<br>编辑网络接口文件：</p>
+<pre><code>sudo nano <span class="regexp">/etc/</span>network<span class="regexp">/interfaces</span>
+</code></pre><p>默认配置如下：</p>
+<pre><code>auto lo
+iface lo <span class="keyword">inet</span> loopback
+iface eth0 <span class="keyword">inet</span> dhcp
+allow-hotplug wlan0
+iface wlan0 <span class="keyword">inet</span> manual
+wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+iface <span class="keyword">default</span> <span class="keyword">inet</span> dhcp
+</code></pre><p>如果你要设置的是有线网卡的 IP 地址，那么把 eth0 的 dhcp 改成 static 然后在下一行追加 IP 信息，内容如下：</p>
+<pre><code>iface eth0 inet <span class="keyword">static</span>
+address <span class="number">192.168</span><span class="number">.1</span><span class="number">.118</span>        <span class="preprocessor"># 静态IP地址</span>
+netmask <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>        <span class="preprocessor"># 子网掩码</span>
+gateway <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>          <span class="preprocessor"># 网关</span>
+dns-nameservers <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>  <span class="preprocessor">#  DNS服务器</span>
+</code></pre><p>nano tips:</p>
+<ul>
+<li>方向键控制光标移动</li>
+<li><code>Backspace</code>和<code>delete</code>键用来删除</li>
+<li>修改好后, <code>Ctrl+O</code>提示保存文件名，直接回车</li>
+<li><code>Ctrl+X</code>退出nano</li>
+<li><code>Ctrl+Z</code>放弃修改并退出nano</li>
+<li><code>Shift+Insert</code>粘贴</li>
+</ul>
+<h3 id="无线网卡">无线网卡</h3><p>等更新…</p>
+<h2 id="软件更新源">软件更新源</h2><p>由于默认的镜像源网站在国外，导致下载速度非常慢，因此需要修改为国内镜像站点。先备份配置文件，做什么改动之前先备份是个好习惯。</p>
+<pre><code>sudo cp /etc/apt/sources<span class="class">.list</span> /etc/apt/sources<span class="class">.list</span><span class="class">.orig</span>
+</code></pre><p>然后编辑配置文件，输入</p>
+<pre><code>sudo nano <span class="regexp">/etc/</span>apt<span class="regexp">/sources.list 或者sudo vi /</span>etc<span class="regexp">/apt/</span>sources.list
+</code></pre><p>删除所有内容，从下面选一个速度最快的源(ping一下可知, ping mirrors.neusoft.edu.cn)，然后复制粘贴，保存。下面列出的是目前（2015/11/04）还有效的。</p>
+<pre><code><span class="comment">#大连东软信息学院(北方用户)</span>
+deb <span class="symbol">http:</span>/<span class="regexp">/mirrors.neusoft.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.neusoft.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+
+<span class="comment">#中国科学技术大学</span>
+deb <span class="symbol">http:</span>/<span class="regexp">/mirrors.ustc.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.ustc.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+
+<span class="comment">#清华大学</span>
+deb <span class="symbol">http:</span>/<span class="regexp">/mirrors.tuna.tsinghua.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.tuna.tsinghua.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+
+<span class="comment">#重庆大学(中西部用户)</span>
+deb <span class="symbol">http:</span>/<span class="regexp">/mirrors.cqu.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.cqu.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+
+<span class="comment">#前面几个都是教育网的</span>
+
+<span class="comment">#搜狐</span>
+deb <span class="symbol">http:</span>/<span class="regexp">/mirrors.sohu.com/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.sohu.com/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+
+<span class="comment">#阿里云</span>
+deb <span class="symbol">http:</span>/<span class="regexp">/mirrors.aliyun.com/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.aliyun.com/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+</code></pre><p>更多的镜像列表可以访问官方网站<a href="http://www.raspbian.org/RaspbianMirrors/" target="_blank" rel="external">http://www.raspbian.org/RaspbianMirrors/</a></p>
+<p>到这里，大部分初学者就开始虚了，我擦，怎么删除啊？怎么输入？下面以vi为例，看清楚了。复制上面的软件源到剪切板，定位到vi，在键盘上依次输入<code>Esc</code>，<code>ggdG</code>， <code>i</code>，<code>Shift+Insert</code>(或者鼠标右键粘贴)，<code>Esc</code>，<code>ZZ</code>。每一步解释：</p>
+<ul>
+<li>按键盘<code>Esc</code>键，从其他可能的任何模式退出，回到命令模式，防止小白瞎按，进入其他模式</li>
+<li><code>ggdG</code>, 在命令模式下输入，就可以删除所有内容。<code>gg</code>—光标跳至文件首行，<code>dG</code>—删除从当前光标处到文件末尾的内容</li>
+<li><code>i</code>，从命令模式进入插入模式</li>
+<li>按住键盘<code>Shift</code>，然后再按<code>Insert</code>，或者鼠标右键–&gt;粘贴。</li>
+<li><code>Esc</code>同上，<code>ZZ</code>存盘并退出， 也就是在小写模式下按键盘<code>Shift+zz</code></li>
+</ul>
+<p>上面任何一步出错，请<code>Esc</code>，<code>ZQ</code>(或者<code>:q!</code>)，然后重新来。因为我假定你不会任何vim操作。同终端打交道，学点vim操作还是有必要的，编辑器之神，装逼蛮不错的，嘿嘿，其实vim也没有想象的那么难学，我们只需要会基本操作就行了，比如移动光标、删除、撤销、输入、查找替换、复制粘贴等，网上有很多教程可以参考。</p>
+<h2 id="系统更新">系统更新</h2><p>更新升级Raspbian软件包，输入</p>
+<pre><code>sudo apt-<span class="built_in">get</span> <span class="keyword">update</span> &amp;&amp; sudo apt-<span class="built_in">get</span> upgrade
+</code></pre><p>根据你网速快慢，等待时间不等。</p>
+<p>安装vim，输入<code>sudo apt-get install vim</code>,然后编辑 .vimrc，分别输入 <code>vim ~/.vimrc</code>, <code>sudo vim /root/.vimrc</code>, 加入如下内容，</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> <span class="keyword">nu</span></span><br><span class="line"><span class="keyword">syntax</span> <span class="keyword">on</span></span><br><span class="line"><span class="keyword">set</span> tabstop=<span class="number">4</span></span><br></pre></td></tr></table></figure>
+<p>分别表示显示行号、语法高亮，Tab宽度4。</p>
+<p>最后讲一下如何更新RPi 固件(这里固件指的是GPU firmware and kernel)，一般没事不用更新固件，有更新强迫症的没办法，输入</p>
+<pre><code><span class="title">sudo</span> rpi-update
+</code></pre><p>等待固件更新完成，然后重启。如果提示命令找不到，需要安装rpi-update</p>
+<pre><code>sudo apt-<span class="built_in">get</span> install rpi-<span class="keyword">update</span>
+</code></pre><p>来安装rpi-update。我这系统装好后，默认就有rpi-update。查看kernel 版本，输入<code>uname -a</code>。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="安装操作系统">安装操作系统</h1><p>在<a href="https://www.raspberrypi.org/downloads/">https://www.raspberrypi.org/downloads/</a> 下载Raspbian操作系统，下载完成后解压缩得到镜像文件(.img)，然后我们需要一个工具把镜像文件烧录到SD卡上， 我知道有两款工具，Win32DiskImager，USB Image Tool，另外这两款工具还可以备份整个SD卡为一个镜像文件。下面以Win32DiskImager为例说明如何烧录，如图Figure 1所示。</p>
+<ul>
+<li>把micro SD card插入读卡器中，连接上电脑. 等电脑识别后会分配一个盘符(例如G:)</li>
+<li>从<a href="http://sourceforge.net/projects/win32diskimager/">http://sourceforge.net/projects/win32diskimager/</a> 下载 Win32DiskImager， 然后安装</li>
+<li>安装完成后以系统管理员权限运行</li>
+<li>选择之前解压缩得到的镜像文件，选择SD卡所在盘符</li>
+<li>点击Write按钮开始写入镜像文件，然后就是等待，完成后会弹出提示框</li>
+</ul>]]>
+    
+    </summary>
+    
+      <category term="DIY" scheme="http://mkitby.com/tags/DIY/"/>
+    
+      <category term="NAS" scheme="http://mkitby.com/tags/NAS/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/tags/Raspberry-Pi/"/>
+    
+      <category term="树莓派" scheme="http://mkitby.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/categories/Raspberry-Pi/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Raspberry Pi从零开始搭建低成本NAS(2)-硬件组装]]></title>
+    <link href="http://mkitby.com/2015/11/05/raspberry-pi-nas-hw-assembly/"/>
+    <id>http://mkitby.com/2015/11/05/raspberry-pi-nas-hw-assembly/</id>
+    <published>2015-11-05T14:04:14.000Z</published>
+    <updated>2015-12-09T12:56:54.542Z</updated>
+    <content type="html"><![CDATA[<h1 id="所需硬件">所需硬件</h1><p>下面列出所需硬件，注意有的是可选</p>
+<ul>
+<li>Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)</li>
+<li>散热片（两片）+外壳(带风扇)，一天24小时开机，这个还是有必要。也不贵，二三十块钱，某宝就有</li>
+<li>5V 2A电源， Micro USB线用来供电</li>
+<li>16 G micro SD card(class 10+)， 至少16 G, 不然后面没得玩</li>
+<li>移动硬盘或者U盘</li>
+<li>USB集线器带外接电源(可选， 最好配一个)</li>
+<li>USB wifi dongle(可选)：</li>
+</ul>
+<a id="more"></a>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-hw-assembly/figure1.jpg_mkitby" alt=""><br>&gt;Figure 1. 所需硬件<br></div>
+
+<h1 id="硬件安装">硬件安装</h1><p>整个板子详细介绍，参考<a href="http://www.raspberrypi-spy.co.uk/2015/02/introducing-the-raspberry-pi-2-model-b/" target="_blank" rel="external">http://www.raspberrypi-spy.co.uk/2015/02/introducing-the-raspberry-pi-2-model-b/</a>，输出接口定义可以如图Figure 2所示。</p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-hw-assembly/figure2.jpg_mkitby" alt=""><br>Figure 2. Raspberry Pi 2B输出接口定义<br></div>
+
+<p>查看每个pin的详细信息，参考<a href="http://pi.gadgetoid.com/pinout/" target="_blank" rel="external">http://pi.gadgetoid.com/pinout/</a>，Raspberry Pi 2 Model B的GPIO引脚信息如图Figure 3所示。插头的4（+5V电源），6(地)引脚接风扇电源线，注意正负极别接反了。</p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-hw-assembly/figure3.jpg_mkitby" alt=""><br>Figure 3. Raspberry Pi 2 Model B GPIO Header<br></div>
+
+<p>以上是进行硬件组装及DIY需要的一些基本信息, 贴在这方便以后查找需要。安装步骤很简单,</p>
+<ol>
+<li>拿起树莓派板子，看清楚各种插槽接口，搞清楚是干嘛的，小心插坏了~</li>
+<li>按照Figure 1所示，给两片芯片贴上散热片，要买那种自带粘胶的，手不要抖哦，小心贴歪了。</li>
+<li>按照Figure 1所示，把风扇的电源插头接到电源引脚上，然后接上电源看风扇转不。</li>
+<li>没什么问题就装上外壳。</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="所需硬件">所需硬件</h1><p>下面列出所需硬件，注意有的是可选</p>
+<ul>
+<li>Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)</li>
+<li>散热片（两片）+外壳(带风扇)，一天24小时开机，这个还是有必要。也不贵，二三十块钱，某宝就有</li>
+<li>5V 2A电源， Micro USB线用来供电</li>
+<li>16 G micro SD card(class 10+)， 至少16 G, 不然后面没得玩</li>
+<li>移动硬盘或者U盘</li>
+<li>USB集线器带外接电源(可选， 最好配一个)</li>
+<li>USB wifi dongle(可选)：</li>
+</ul>]]>
+    
+    </summary>
+    
+      <category term="DIY" scheme="http://mkitby.com/tags/DIY/"/>
+    
+      <category term="NAS" scheme="http://mkitby.com/tags/NAS/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/tags/Raspberry-Pi/"/>
+    
+      <category term="树莓派" scheme="http://mkitby.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/categories/Raspberry-Pi/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Raspberry Pi从零开始搭建低成本NAS(1)-开篇]]></title>
+    <link href="http://mkitby.com/2015/11/05/raspberry-pi-nas-starting/"/>
+    <id>http://mkitby.com/2015/11/05/raspberry-pi-nas-starting/</id>
+    <published>2015-11-05T11:38:37.000Z</published>
+    <updated>2015-12-09T12:56:49.552Z</updated>
+    <content type="html"><![CDATA[<p>入手树莓派也差不多四五个月了，其实最初就是想弄一台离线下载机，最开始是在网上买了一台HG255D路由器来实现离线下载，最后发现配置太差，根本满足不了需求，直接扔一边了。后面树莓派进入我的视线，配置也还行，可玩性比较高，随后入手。目前这台迷你型服务器已经稳定运行三个多月了，总是听说linux稳定，现在自己是体会到了。</p>
+<a id="more"></a>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-starting/figure1.jpg_mkitby" alt=""><br></div>
+
+<p>这个系列教程是由我平时的一些纪录文档整理而来。主要面向跟我一样没有什么Linux基础的初级入门用户，让大家少走弯路，来自己搭建一个低成本家庭NAS多媒体服务中心，它主要包含samba(文件共享), ftp, upnp/dlna, 远程下载等功能。<br>本系列主要分为以下几部分：</p>
+<ol>
+<li><a href="/2015/11/05/raspberry-pi-nas-starting/">Raspberry Pi从零开始搭建低成本NAS(1)-开篇</a></li>
+<li><a href="/2015/11/05/raspberry-pi-nas-hw-assembly/">Raspberry Pi从零开始搭建低成本NAS(2)-硬件组装</a></li>
+<li><a href="/2015/11/05/raspberry-pi-nas-os-install/">Raspberry Pi从零开始搭建低成本NAS(3)-系统安装</a></li>
+<li><a href="/2015/11/05/raspberry-pi-nas-storage-device/">Raspberry Pi从零开始搭建低成本NAS(4)-存储设备</a></li>
+<li><a href="/2015/11/09/raspberry-pi-nas-upnp-dlna/">Raspberry Pi从零开始搭建低成本NAS(5)-UPNP/DLNA多媒体</a></li>
+<li>Raspberry Pi从零开始搭建低成本NAS(6)-文件共享</li>
+<li>Raspberry Pi从零开始搭建低成本NAS(7)-远程下载</li>
+<li>Raspberry Pi从零开始搭建低成本NAS(8)-DNS服务器</li>
+<li>Raspberry Pi从零开始搭建低成本NAS(9)-硬盘功耗管理</li>
+<li>Raspberry Pi从零开始搭建低成本NAS(10)-外网登录树莓派</li>
+<li>Raspberry Pi从零开始搭建低成本NAS(11)-监控关键服务</li>
+<li>Raspberry Pi从零开始搭建低成本NAS(12)-操作系统备份</li>
+</ol>
+<embed height="452" width="544" quality="high" allowfullscreen="true" type="application/x-shockwave-flash" src="http://share.acg.tv/flash.swf" flashvars="aid=3186450&page=1" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>入手树莓派也差不多四五个月了，其实最初就是想弄一台离线下载机，最开始是在网上买了一台HG255D路由器来实现离线下载，最后发现配置太差，根本满足不了需求，直接扔一边了。后面树莓派进入我的视线，配置也还行，可玩性比较高，随后入手。目前这台迷你型服务器已经稳定运行三个多月了，总是听说linux稳定，现在自己是体会到了。</p>]]>
+    
+    </summary>
+    
+      <category term="DIY" scheme="http://mkitby.com/tags/DIY/"/>
+    
+      <category term="NAS" scheme="http://mkitby.com/tags/NAS/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/tags/Raspberry-Pi/"/>
+    
+      <category term="树莓派" scheme="http://mkitby.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/categories/Raspberry-Pi/"/>
+    
+  </entry>
+  
+</feed>

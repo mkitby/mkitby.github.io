@@ -1,0 +1,921 @@
+<!doctype html>
+<html class="theme-next ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="q-Lmy2vt9CgTBDrQSJbOPON5WWdVkYkK1GbH4kMJVbE" />
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DIY,NAS,Raspberry Pi,树莓派," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="mkitby's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="安装操作系统在https://www.raspberrypi.org/downloads/ 下载Raspbian操作系统，下载完成后解压缩得到镜像文件(.img)，然后我们需要一个工具把镜像文件烧录到SD卡上， 我知道有两款工具，Win32DiskImager，USB Image Tool，另外这两款工具还可以备份整个SD卡为一个镜像文件。下面以Win32DiskImager为例说明如何烧录，如图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Raspberry Pi从零开始搭建低成本NAS(3)-系统安装">
+<meta property="og:url" content="http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/index.html">
+<meta property="og:site_name" content="mkitby's Blog">
+<meta property="og:description" content="安装操作系统在https://www.raspberrypi.org/downloads/ 下载Raspbian操作系统，下载完成后解压缩得到镜像文件(.img)，然后我们需要一个工具把镜像文件烧录到SD卡上， 我知道有两款工具，Win32DiskImager，USB Image Tool，另外这两款工具还可以备份整个SD卡为一个镜像文件。下面以Win32DiskImager为例说明如何烧录，如图">
+<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure1.jpg_mkitby">
+<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure2.jpg_mkitby">
+<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure3.jpg_mkitby">
+<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure4.jpg_mkitby">
+<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure5.jpg_mkitby">
+<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure6.jpg_mkitby">
+<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure7.jpg_mkitby">
+<meta property="og:updated_time" content="2015-12-09T12:56:50.513Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Raspberry Pi从零开始搭建低成本NAS(3)-系统安装">
+<meta name="twitter:description" content="安装操作系统在https://www.raspberrypi.org/downloads/ 下载Raspbian操作系统，下载完成后解压缩得到镜像文件(.img)，然后我们需要一个工具把镜像文件烧录到SD卡上， 我知道有两款工具，Win32DiskImager，USB Image Tool，另外这两款工具还可以备份整个SD卡为一个镜像文件。下面以Win32DiskImager为例说明如何烧录，如图">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post',
+    motion: false
+  };
+</script>
+
+  <title> Raspberry Pi从零开始搭建低成本NAS(3)-系统安装 | mkitby's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-69557502-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?774b09b66f1731e6b071844565c08311";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">mkitby's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'WbDyBT-jezXxratZXAtH','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Raspberry Pi从零开始搭建低成本NAS(3)-系统安装
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-11-05T22:05:49+08:00" content="2015-11-05">
+              2015-11-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Raspberry-Pi/" itemprop="url" rel="index">
+                    <span itemprop="name">Raspberry Pi</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/11/05/raspberry-pi-nas-os-install/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/05/raspberry-pi-nas-os-install/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="安装操作系统">安装操作系统</h1><p>在<a href="https://www.raspberrypi.org/downloads/" target="_blank" rel="external">https://www.raspberrypi.org/downloads/</a> 下载Raspbian操作系统，下载完成后解压缩得到镜像文件(.img)，然后我们需要一个工具把镜像文件烧录到SD卡上， 我知道有两款工具，Win32DiskImager，USB Image Tool，另外这两款工具还可以备份整个SD卡为一个镜像文件。下面以Win32DiskImager为例说明如何烧录，如图Figure 1所示。</p>
+<ul>
+<li>把micro SD card插入读卡器中，连接上电脑. 等电脑识别后会分配一个盘符(例如G:)</li>
+<li>从<a href="http://sourceforge.net/projects/win32diskimager/" target="_blank" rel="external">http://sourceforge.net/projects/win32diskimager/</a> 下载 Win32DiskImager， 然后安装</li>
+<li>安装完成后以系统管理员权限运行</li>
+<li>选择之前解压缩得到的镜像文件，选择SD卡所在盘符</li>
+<li>点击Write按钮开始写入镜像文件，然后就是等待，完成后会弹出提示框</li>
+</ul>
+<a id="more"></a>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure1.jpg_mkitby" alt=""><br>Figure 1. Win32DiskImager烧录<br></div>
+
+<p>如何英文还可以，也可以直接参考官方文档：<br><a href="https://www.raspberrypi.org/documentation/installation/installing-images/windows.md" target="_blank" rel="external">https://www.raspberrypi.org/documentation/installation/installing-images/windows.md</a></p>
+<h1 id="登录SSH">登录SSH</h1><p>把micro SD card 插入Raspberry Pi，插上网线，连到路由器，然后上电。由于我们没有键盘和显示器，所以需要用SSH登录RPi(Raspberry Pi缩写)，默认登陆用户名/密码：pi / raspberry。 但是不知道IP地址怎么办？其实我们可以从路由器设置里面得到IP地址。下面以TP-LINK为例，其他路由器类似。 进入路由器设置—&gt;DHCP服务器—&gt;客户端列表，就可以得到RPi的IP地址，如图Figure 2所示。然后最好绑定RPi的IP和MAC，进入路由器设置—&gt;DHCP服务器—&gt;静态地址保留，然后在设置里面，添加树莓派IP地址192.168.1.118和MAC地址。以后树莓派每次启动，IP地址都会固定为192.168.1.118。当然也可以设置RPi为静态IP地址，这个我们后面再讲。</p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure2.jpg_mkitby" alt=""><br>Figure 2. 路由器设置界面<br></div>
+
+<p>接下来用SSH客户端(Puty, SecureCRT, XShell等) 登录RPi，我这里以XShell(官网<a href="https://www.netsarang.com/" target="_blank" rel="external">https://www.netsarang.com/</a> )为例,</p>
+<ul>
+<li>先去官网下载安装</li>
+<li>运行XShell，会弹出会话对话框，如图Figure 3所示， 点击“新建”按钮，会弹出如图Figure 4所示对话框，“名称”输入Raspberry Pi(或者其它任何你想要的名字)，“主机”输入之前获得的IP地址，其它默认，点击确定，然后会回到如图Figure 3。</li>
+</ul>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure3.jpg_mkitby" alt=""><br>Figure 3. XShell运行开始界面<br></div>
+
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure4.jpg_mkitby" alt=""><br>Figure 4. 新建会话属性对话框<br></div>
+
+<ul>
+<li>点击“连接”按钮，出现如图Figure 5所示界面， 输入pi，勾选“记住用户名”复选框，点击“确定”按钮，弹出如图Figure 6所示对话框，输入密码raspberry，勾选“记住密码”复选框，点击“确定”按钮。</li>
+</ul>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure5.jpg_mkitby" alt=""><br>Figure 5. SSH用户名<br></div>
+
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure6.jpg_mkitby" alt=""><br>Figure 6. SSH用户身份验证<br></div>
+
+<ul>
+<li>以上所有步骤都没有问题的话，恭喜你，成功登录SSH。以后所有的操作基本上全是通过SSH来完成。</li>
+</ul>
+<h1 id="系统配置">系统配置</h1><h2 id="raspi-config配置">raspi-config配置</h2><p>接下来就是进行系统的一些基本配置，输入，</p>
+<pre><code><span class="title">sudo</span> raspi-config
+</code></pre><p>这里面可以进行一些系统相关设置，如图Figure 7所示，我们主要设置以下方面：</p>
+<ul>
+<li>选择Expand Filesystem，然后把整个系统的可用空间扩展到储存卡的大小。</li>
+<li>选择Change User Password设置新密码，按提示步骤完成</li>
+<li>选择Internationalisation Options—&gt;Change Timezone设置时区，在中国大陆，选择Asia—&gt;Chongqing(或者Hong_Kong)都可以</li>
+<li>按’Tab键，选中&lt;Finish&gt;，回车，提示Reboot(重启)，选&lt;Yes&gt;，回车，RPi就会重启，SSH会自动断开连接，然后重新连接SSH，记得输入你设置的新密码。</li>
+</ul>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure7.jpg_mkitby" alt=""><br>Figure 7. raspi-config命令配置界面<br></div>
+
+<p>其他一些选项，我反正是没设置，保持默认，想折腾的可以试试，比如Overclock(超频)。</p>
+<p>Tips :</p>
+<ul>
+<li>输入命令时，按<code>TAB</code>键可以自动完成</li>
+<li><code>sudo</code> 临时用root权限运行命令</li>
+<li>用命令设置用户密码：<code>passwd</code> 用户名，比如设置pi密码，<code>passwd pi</code></li>
+<li>启用root账户，输入<code>sudo passwd root</code>,设置 root 账号的密码，会让你输入两次新密码。输入<code>sudo passwd --unlock root</code>,启用 root 账号登录。建议不要用root账户登录，而采用下面su命令</li>
+<li><p>切换到某一用户，<code>su - 用户名</code>，注意-前后各有一个空格，切换到root输入<code>su – root</code></p>
+</li>
+<li><p>某个命令不会用，可以输入<code>命令 --help</code>或者<code>man</code>。例如 <code>passwd –help</code>, <code>man passwd</code></p>
+</li>
+<li>man命令快捷键，e—向下滚动，y—向上滚动，q—退出，h—查看帮助</li>
+</ul>
+<h2 id="网卡设置">网卡设置</h2><p>我们可以选择有线网卡或者购买无线网卡。如果树莓派主要用来做服务器，就像本文那样，建议使用有线网卡，原因有两点，第一信号稳定，网络质量有保证；第二点减小USB耗电，为后面挂载移动硬盘提供有利条件，具体后面会讲。</p>
+<h3 id="有线网卡">有线网卡</h3><p>设置静态IP地址，如果前面绑定过IP地址和MAC地址，那么这一步可以选择跳过。<br>编辑网络接口文件：</p>
+<pre><code>sudo nano <span class="regexp">/etc/</span>network<span class="regexp">/interfaces</span>
+</code></pre><p>默认配置如下：</p>
+<pre><code>auto lo
+iface lo <span class="keyword">inet</span> loopback
+iface eth0 <span class="keyword">inet</span> dhcp
+allow-hotplug wlan0
+iface wlan0 <span class="keyword">inet</span> manual
+wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+iface <span class="keyword">default</span> <span class="keyword">inet</span> dhcp
+</code></pre><p>如果你要设置的是有线网卡的 IP 地址，那么把 eth0 的 dhcp 改成 static 然后在下一行追加 IP 信息，内容如下：</p>
+<pre><code>iface eth0 inet <span class="keyword">static</span>
+address <span class="number">192.168</span><span class="number">.1</span><span class="number">.118</span>        <span class="preprocessor"># 静态IP地址</span>
+netmask <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>        <span class="preprocessor"># 子网掩码</span>
+gateway <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>          <span class="preprocessor"># 网关</span>
+dns-nameservers <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>  <span class="preprocessor">#  DNS服务器</span>
+</code></pre><p>nano tips:</p>
+<ul>
+<li>方向键控制光标移动</li>
+<li><code>Backspace</code>和<code>delete</code>键用来删除</li>
+<li>修改好后, <code>Ctrl+O</code>提示保存文件名，直接回车</li>
+<li><code>Ctrl+X</code>退出nano</li>
+<li><code>Ctrl+Z</code>放弃修改并退出nano</li>
+<li><code>Shift+Insert</code>粘贴</li>
+</ul>
+<h3 id="无线网卡">无线网卡</h3><p>等更新…</p>
+<h2 id="软件更新源">软件更新源</h2><p>由于默认的镜像源网站在国外，导致下载速度非常慢，因此需要修改为国内镜像站点。先备份配置文件，做什么改动之前先备份是个好习惯。</p>
+<pre><code>sudo cp /etc/apt/sources<span class="class">.list</span> /etc/apt/sources<span class="class">.list</span><span class="class">.orig</span>
+</code></pre><p>然后编辑配置文件，输入</p>
+<pre><code>sudo nano <span class="regexp">/etc/</span>apt<span class="regexp">/sources.list 或者sudo vi /</span>etc<span class="regexp">/apt/</span>sources.list
+</code></pre><p>删除所有内容，从下面选一个速度最快的源(ping一下可知, ping mirrors.neusoft.edu.cn)，然后复制粘贴，保存。下面列出的是目前（2015/11/04）还有效的。</p>
+<pre><code><span class="comment">#大连东软信息学院(北方用户)</span>
+deb <span class="symbol">http:</span>/<span class="regexp">/mirrors.neusoft.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.neusoft.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+
+<span class="comment">#中国科学技术大学</span>
+deb <span class="symbol">http:</span>/<span class="regexp">/mirrors.ustc.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.ustc.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+
+<span class="comment">#清华大学</span>
+deb <span class="symbol">http:</span>/<span class="regexp">/mirrors.tuna.tsinghua.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.tuna.tsinghua.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+
+<span class="comment">#重庆大学(中西部用户)</span>
+deb <span class="symbol">http:</span>/<span class="regexp">/mirrors.cqu.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.cqu.edu.cn/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+
+<span class="comment">#前面几个都是教育网的</span>
+
+<span class="comment">#搜狐</span>
+deb <span class="symbol">http:</span>/<span class="regexp">/mirrors.sohu.com/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.sohu.com/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+
+<span class="comment">#阿里云</span>
+deb <span class="symbol">http:</span>/<span class="regexp">/mirrors.aliyun.com/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.aliyun.com/raspbian</span><span class="regexp">/raspbian/</span> wheezy main contrib non-free rpi
+</code></pre><p>更多的镜像列表可以访问官方网站<a href="http://www.raspbian.org/RaspbianMirrors/" target="_blank" rel="external">http://www.raspbian.org/RaspbianMirrors/</a></p>
+<p>到这里，大部分初学者就开始虚了，我擦，怎么删除啊？怎么输入？下面以vi为例，看清楚了。复制上面的软件源到剪切板，定位到vi，在键盘上依次输入<code>Esc</code>，<code>ggdG</code>， <code>i</code>，<code>Shift+Insert</code>(或者鼠标右键粘贴)，<code>Esc</code>，<code>ZZ</code>。每一步解释：</p>
+<ul>
+<li>按键盘<code>Esc</code>键，从其他可能的任何模式退出，回到命令模式，防止小白瞎按，进入其他模式</li>
+<li><code>ggdG</code>, 在命令模式下输入，就可以删除所有内容。<code>gg</code>—光标跳至文件首行，<code>dG</code>—删除从当前光标处到文件末尾的内容</li>
+<li><code>i</code>，从命令模式进入插入模式</li>
+<li>按住键盘<code>Shift</code>，然后再按<code>Insert</code>，或者鼠标右键–&gt;粘贴。</li>
+<li><code>Esc</code>同上，<code>ZZ</code>存盘并退出， 也就是在小写模式下按键盘<code>Shift+zz</code></li>
+</ul>
+<p>上面任何一步出错，请<code>Esc</code>，<code>ZQ</code>(或者<code>:q!</code>)，然后重新来。因为我假定你不会任何vim操作。同终端打交道，学点vim操作还是有必要的，编辑器之神，装逼蛮不错的，嘿嘿，其实vim也没有想象的那么难学，我们只需要会基本操作就行了，比如移动光标、删除、撤销、输入、查找替换、复制粘贴等，网上有很多教程可以参考。</p>
+<h2 id="系统更新">系统更新</h2><p>更新升级Raspbian软件包，输入</p>
+<pre><code>sudo apt-<span class="built_in">get</span> <span class="keyword">update</span> &amp;&amp; sudo apt-<span class="built_in">get</span> upgrade
+</code></pre><p>根据你网速快慢，等待时间不等。</p>
+<p>安装vim，输入<code>sudo apt-get install vim</code>,然后编辑 .vimrc，分别输入 <code>vim ~/.vimrc</code>, <code>sudo vim /root/.vimrc</code>, 加入如下内容，</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> <span class="keyword">nu</span></span><br><span class="line"><span class="keyword">syntax</span> <span class="keyword">on</span></span><br><span class="line"><span class="keyword">set</span> tabstop=<span class="number">4</span></span><br></pre></td></tr></table></figure>
+<p>分别表示显示行号、语法高亮，Tab宽度4。</p>
+<p>最后讲一下如何更新RPi 固件(这里固件指的是GPU firmware and kernel)，一般没事不用更新固件，有更新强迫症的没办法，输入</p>
+<pre><code><span class="title">sudo</span> rpi-update
+</code></pre><p>等待固件更新完成，然后重启。如果提示命令找不到，需要安装rpi-update</p>
+<pre><code>sudo apt-<span class="built_in">get</span> install rpi-<span class="keyword">update</span>
+</code></pre><p>来安装rpi-update。我这系统装好后，默认就有rpi-update。查看kernel 版本，输入<code>uname -a</code>。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DIY/" rel="tag">#DIY</a>
+          
+            <a href="/tags/NAS/" rel="tag">#NAS</a>
+          
+            <a href="/tags/Raspberry-Pi/" rel="tag">#Raspberry Pi</a>
+          
+            <a href="/tags/树莓派/" rel="tag">#树莓派</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/05/raspberry-pi-nas-hw-assembly/" rel="next" title="Raspberry Pi从零开始搭建低成本NAS(2)-硬件组装">
+                <i class="fa fa-chevron-left"></i> Raspberry Pi从零开始搭建低成本NAS(2)-硬件组装
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/05/raspberry-pi-nas-storage-device/" rel="prev" title="Raspberry Pi从零开始搭建低成本NAS(4)-存储设备">
+                Raspberry Pi从零开始搭建低成本NAS(4)-存储设备 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/11/05/raspberry-pi-nas-os-install/"
+           data-title="Raspberry Pi从零开始搭建低成本NAS(3)-系统安装" data-url="http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://s.gravatar.com/avatar/b68532b396013f29eb7cf67138534fb4?s=80" alt="mkitby" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">mkitby</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Just notes</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tkggitfk24" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> github
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/tkggitfk24" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> zhihu
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装操作系统"><span class="nav-number">1.</span> <span class="nav-text">安装操作系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#登录SSH"><span class="nav-number">2.</span> <span class="nav-text">登录SSH</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#系统配置"><span class="nav-number">3.</span> <span class="nav-text">系统配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#raspi-config配置"><span class="nav-number">3.1.</span> <span class="nav-text">raspi-config配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网卡设置"><span class="nav-number">3.2.</span> <span class="nav-text">网卡设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#有线网卡"><span class="nav-number">3.2.1.</span> <span class="nav-text">有线网卡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无线网卡"><span class="nav-number">3.2.2.</span> <span class="nav-text">无线网卡</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#软件更新源"><span class="nav-number">3.3.</span> <span class="nav-text">软件更新源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#系统更新"><span class="nav-number">3.4.</span> <span class="nav-text">系统更新</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mkitby</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"mkitby"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
