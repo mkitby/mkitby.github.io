@@ -64,7 +64,7 @@
 <meta property="og:description" content="准备一块硬盘，以及一个移动硬盘盒（支持2.5/3.5寸的硬盘，以及外接供电）把硬盘分区，并格式化为ext4 格式，这样性能更好，寿命应该更长(待考证)。
 由于RPi的USB口供电能力有限，所以移动硬盘需要外部供电Table 1是官方给出的数据(https://www.raspberrypi.org/help/faqs/#power) ， 可以看到Raspberry Pi 2 Model B USB">
 <meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-storage-device/table1.jpg_mkitby">
-<meta property="og:updated_time" content="2015-12-09T12:56:52.233Z">
+<meta property="og:updated_time" content="2015-12-13T09:47:49.851Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Raspberry Pi从零开始搭建低成本NAS(4)-存储设备">
 <meta name="twitter:description" content="准备一块硬盘，以及一个移动硬盘盒（支持2.5/3.5寸的硬盘，以及外接供电）把硬盘分区，并格式化为ext4 格式，这样性能更好，寿命应该更长(待考证)。
@@ -324,7 +324,7 @@
 <div align="center"><br>Table 1. 各种版本的供电参数<br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-storage-device/table1.jpg_mkitby" alt=""><br></div>
 
 <p>注意粗体句子，意思是说虽然电流够了，但是像3G模块和USB移动硬盘需要较高电流或者会产生浪涌电流的设备仍然需要外部带供电的USB集线器。所以为了设备安全最好按照官方的建议做。</p>
-<p>实在是嫌麻烦或者不怕死的，比如像我这样的，嘿嘿，可以裸接2.5寸移动硬盘，但为了保险期间，就不要再接什么其它USB设备了，比如无线网卡（类似于3G模块）、鼠标、键盘等。</p>
+<p>实在是嫌麻烦或者不怕死的，比如像我这样的，嘿嘿，可以裸接2.5寸移动硬盘，但为了保险起见，就不要再接什么其它USB设备了，比如无线网卡（类似于3G模块）、鼠标、键盘等。</p>
 <p>所以根据上面的分析对于想外接移动硬盘的人来说，有以下两种解决方案：</p>
 <ol>
 <li>直接用RPi给2.5寸移动硬盘供电<br>郑重声明：请考虑清楚是否一定要采用这种方式，自己评估风险（出现任何烧机，损坏，移动硬盘挂掉等任何硬件故障），出现一切问题自己负责，别哭着找我啊，我可不赔。</li>
@@ -535,21 +535,21 @@ tmpfs           <span class="number">186</span>M  <span class="number">4.0</span
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">1</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -626,8 +626,8 @@ tmpfs           <span class="number">186</span>M  <span class="number">4.0</span
       <div class="footer-inner">
         <div class="copyright" >
   
-  &copy; 
-  <span itemprop="copyrightYear">2015</span>
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>
