@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://mkitby.com/"/>
-  <updated>2016-01-15T15:40:52.063Z</updated>
+  <updated>2016-04-08T13:34:37.714Z</updated>
   <id>http://mkitby.com/</id>
   
   <author>
@@ -15,14 +15,269 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[Raspberry Pi从零开始搭建低成本NAS(7)-Aria2远程下载]]></title>
-    <link href="http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download/"/>
-    <id>http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download/</id>
-    <published>2016-01-15T14:30:44.000Z</published>
-    <updated>2016-01-15T15:40:52.063Z</updated>
-    <content type="html"><![CDATA[<p>远程下载内容比较多，所以分为两篇文章，先介绍Aria2，再介绍迅雷。</p>
+    <title><![CDATA[Raspberry Pi从零开始搭建低成本NAS(10)-监控关键服务]]></title>
+    <link href="http://mkitby.com/2016/04/08/raspberry-pi-nas-monitor/"/>
+    <id>http://mkitby.com/2016/04/08/raspberry-pi-nas-monitor/</id>
+    <published>2016-04-08T13:11:56.000Z</published>
+    <updated>2016-04-08T13:34:37.714Z</updated>
+    <content type="html"><![CDATA[<p>服务器长时间运行，难免有些服务会挂掉，最好就是采用监控软件来监控关键服务，保证服务挂掉之后能够自动恢复。下面介绍如何使用monit来实现监控：</p>
 <a id="more"></a>
+<h1 id="安装配置monit">安装配置monit</h1><p>首先安装monit,</p>
+<pre><code>sudo apt-<span class="keyword">get</span> install monit
+</code></pre><p>编辑配置文件，</p>
+<pre><code>sudo vim <span class="regexp">/etc/m</span>onit<span class="regexp">/monitrc</span>
+</code></pre><p>下面只列出我认为可能需要修改的地方,</p>
+<pre><code><span class="preprocessor"># 检查周期，默认为<span class="number">120</span>秒，可以根据需要自行调节，这里设置为<span class="number">30</span>秒。</span>
+<span class="built_in">set</span> daemon  <span class="number">30</span>
+
+<span class="preprocessor"># 开启内嵌的web服务，可以访问http:<span class="comment">//RPi-IP:2812查看监控状态，去掉最前面的“#”可以开启，默认禁用</span></span>
+<span class="preprocessor">#set httpd port <span class="number">2812</span> and</span>
+<span class="preprocessor">#allow localhost        # 允许本地访问</span>
+<span class="preprocessor">#allow <span class="number">192.168</span><span class="number">.1</span><span class="number">.0</span>/<span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span> # 允许<span class="number">192.168</span><span class="number">.1</span><span class="number">.0</span>-<span class="number">192.168</span><span class="number">.1</span><span class="number">.255</span>访问</span>
+
+<span class="preprocessor"># 包含文件夹</span>
+include /etc/monit/conf.d<span class="comment">/*</span>
+</code></pre><h1 id="新建相关配置文件">新建相关配置文件</h1><h2 id="aria2">aria2</h2><p>新建配置文件aria2.conf，</p>
+<pre><code>sudo vim /etc/monit/<span class="keyword">conf</span>.<span class="keyword">d</span>/aria2.<span class="keyword">conf</span>
+</code></pre><p>输入，</p>
+<pre><code># sudo vim /etc/monit/conf.d/aria2.conf
+<span class="operator"><span class="keyword">check</span> process aria2 <span class="keyword">with</span> matching aria2c
+    <span class="keyword">start</span> program = <span class="string">"/etc/init.d/aria2c start"</span>
+    <span class="keyword">stop</span> program  = <span class="string">"/etc/init.d/aria2c stop"</span>
+    <span class="keyword">if</span> <span class="keyword">failed</span> port <span class="number">6800</span> <span class="keyword">type</span> tcp <span class="keyword">then</span> restart
+    <span class="keyword">if</span> <span class="number">3</span> restarts <span class="keyword">within</span> <span class="number">5</span> cycles <span class="keyword">then</span> <span class="keyword">timeout</span></span>
+</code></pre><h2 id="miniDLNA">miniDLNA</h2><p>新建配置文件minidlna.conf，</p>
+<pre><code>sudo vim/etc/monit/<span class="keyword">conf</span>.<span class="keyword">d</span>/minidlna.<span class="keyword">conf</span>
+</code></pre><p>输入，</p>
+<pre><code># sudo vim /etc/monit/conf.d/minidlna.conf
+<span class="operator"><span class="keyword">check</span> process minidlna <span class="keyword">with</span> pidfile /<span class="keyword">var</span>/run/minidlna/minidlna.pid
+    <span class="keyword">start</span> program = <span class="string">"/etc/init.d/minidlna start"</span>
+    <span class="keyword">stop</span> program  = <span class="string">"/etc/init.d/minidlna stop"</span>
+    <span class="keyword">if</span> <span class="keyword">failed</span> port <span class="number">8200</span> <span class="keyword">use</span> <span class="keyword">type</span> tcp <span class="keyword">then</span> restart
+    <span class="keyword">if</span> <span class="number">3</span> restarts <span class="keyword">within</span> <span class="number">5</span> cycles <span class="keyword">then</span> <span class="keyword">timeout</span></span>
+</code></pre><h2 id="nginx">nginx</h2><p>新建配置文件/nginx.conf，</p>
+<pre><code>sudo vim /etc/monit/<span class="keyword">conf</span>.<span class="keyword">d</span>/nginx.<span class="keyword">conf</span>
+</code></pre><p>输入，</p>
+<pre><code># sudo vim /etc/monit/conf.d/nginx.conf
+<span class="operator"><span class="keyword">check</span> process nginx <span class="keyword">with</span> pidfile /<span class="keyword">var</span>/run/nginx.pid
+  <span class="keyword">start</span> program = <span class="string">"/etc/init.d/nginx start"</span> <span class="keyword">with</span> <span class="keyword">timeout</span> <span class="number">10</span> seconds
+  <span class="keyword">stop</span> program  = <span class="string">"/etc/init.d/nginx stop"</span>
+  <span class="keyword">if</span> <span class="keyword">failed</span> host localhost port <span class="number">81</span> protocol <span class="keyword">http</span>
+     <span class="keyword">with</span> <span class="keyword">timeout</span> <span class="number">10</span> seconds
+     <span class="keyword">then</span> restart
+  <span class="keyword">if</span> <span class="number">3</span> restarts <span class="keyword">within</span> <span class="number">5</span> cycles <span class="keyword">then</span> <span class="keyword">timeout</span>
+  <span class="keyword">group</span> webserver</span>
+</code></pre><h2 id="samba">samba</h2><p>新建配置文件samba.conf，</p>
+<pre><code>sudo vim /etc/monit/<span class="keyword">conf</span>.<span class="keyword">d</span>/samba.<span class="keyword">conf</span>
+</code></pre><p>输入，</p>
+<pre><code># sudo vim /etc/monit/conf.d/samba.conf
+<span class="operator"><span class="keyword">check</span> process samba <span class="keyword">with</span> pidfile /<span class="keyword">var</span>/run/samba/smbd.pid
+        <span class="keyword">start</span> program = <span class="string">"/etc/init.d/samba start"</span>
+        <span class="keyword">stop</span> program = <span class="string">"/etc/init.d/samba stop"</span>
+        <span class="keyword">if</span> <span class="keyword">failed</span> port <span class="number">139</span> <span class="keyword">then</span> restart
+        <span class="keyword">if</span> <span class="number">5</span> restarts <span class="keyword">within</span> <span class="number">5</span> cycles <span class="keyword">then</span> <span class="keyword">timeout</span></span>
+</code></pre><h2 id="ftp">ftp</h2><p>新建配置文vsftpd.conf,</p>
+<pre><code>sudo vim /etc/monit/<span class="keyword">conf</span>.<span class="keyword">d</span>/vsftpd.<span class="keyword">conf</span>
+</code></pre><p>输入，</p>
+<pre><code># sudo vim /etc/monit/conf.d/vsftpd.conf
+<span class="operator"><span class="keyword">check</span> process vsftpd <span class="keyword">with</span> pidfile /<span class="keyword">var</span>/run/vsftpd/vsftpd.pid
+    <span class="keyword">start</span> program = <span class="string">"/etc/init.d/vsftpd start"</span>
+    <span class="keyword">stop</span> program = <span class="string">"/etc/init.d/vsftpd stop"</span>
+    <span class="keyword">if</span> <span class="keyword">failed</span> port <span class="number">21</span> <span class="keyword">use</span> <span class="keyword">type</span> tcp <span class="keyword">then</span> restart</span>
+</code></pre><h2 id="迅雷">迅雷</h2><p>新建配置文xware_xunlei.conf,</p>
+<pre><code>sudo vim /etc/monit/<span class="keyword">conf</span>.<span class="keyword">d</span>/xware_xunlei.<span class="keyword">conf</span>
+</code></pre><p>输入，</p>
+<pre><code><span class="comment"># sudo vim /etc/monit/conf.d/xware_xunlei.conf</span><span class="instruction">
+check </span>process xunlei with matching EmbedThun
+    start program = <span class="string">"/home/pi/xunlei/portal"</span>
+   <span class="instruction"> if </span>failed port 9002 then restart
+   <span class="instruction"> if </span>3 restarts within 5 cycles then timeout
+</code></pre><h1 id="重启服务">重启服务</h1><pre><code><span class="title">sudo</span> service monit reload &amp;&amp; sudo service monit restart
+</code></pre><p>通过查看log文件，验证monit服务已经启动</p>
+<pre><code>sudo tail <span class="attribute">-f</span> /<span class="built_in">var</span>/<span class="keyword">log</span>/monit<span class="built_in">.</span><span class="keyword">log</span>
+</code></pre><p>参考：</p>
+<ol>
+<li><a href="http://www.tecmint.com/how-to-install-and-setup-monit-linux-process-and-services-monitoring-program/" target="_blank" rel="external">http://www.tecmint.com/how-to-install-and-setup-monit-linux-process-and-services-monitoring-program/</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>服务器长时间运行，难免有些服务会挂掉，最好就是采用监控软件来监控关键服务，保证服务挂掉之后能够自动恢复。下面介绍如何使用monit来实现监控：</p>]]>
+    
+    </summary>
+    
+      <category term="DIY" scheme="http://mkitby.com/tags/DIY/"/>
+    
+      <category term="NAS" scheme="http://mkitby.com/tags/NAS/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/tags/Raspberry-Pi/"/>
+    
+      <category term="monit" scheme="http://mkitby.com/tags/monit/"/>
+    
+      <category term="树莓派" scheme="http://mkitby.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/categories/Raspberry-Pi/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Raspberry Pi从零开始搭建低成本NAS(9)-外网登录树莓派]]></title>
+    <link href="http://mkitby.com/2016/04/07/raspberry-pi-nas-remote-management/"/>
+    <id>http://mkitby.com/2016/04/07/raspberry-pi-nas-remote-management/</id>
+    <published>2016-04-07T15:25:50.000Z</published>
+    <updated>2016-04-08T13:31:23.612Z</updated>
+    <content type="html"><![CDATA[<p>有时候我们可能需要在外网环境下控制家里面的树莓派，根据实际网络情况，提供下面两个方案供选择。</p>
+<ul>
+<li>外网远程登录树莓派SSH</li>
+<li>基于Web的SSH</li>
+</ul>
+<p>在详细介绍这两种方案之前，我们需要先解决一个问题，如何获取树莓派外网（公网）IP地址？我们的树莓派一般处于路由器后面，外网不可见。</p>
+<a id="more"></a>
+<h1 id="外网IP地址">外网IP地址</h1><p>有两种方法可以获取到外网IP地址，一，通过Python脚本获取，二，动态域名。因为免费的动态域名时不时会抽风，为了保证可靠性，可以同时使用这两种方法。</p>
+<h2 id="Python脚本获取">Python脚本获取</h2><p>这种方法是通过树莓派自己获取公网IP，然后自动发动到指定的Email。创建文件external_ip.py，</p>
+<pre><code>sudo <span class="keyword">vim</span> /home/pi/external_ip.<span class="keyword">py</span>
+</code></pre><p>输入如下内容，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> smtplib</span><br><span class="line"><span class="keyword">from</span> email.mime.text <span class="keyword">import</span> MIMEText</span><br><span class="line"></span><br><span class="line"><span class="comment">#############</span></span><br><span class="line"><span class="comment">#To address</span></span><br><span class="line">mailto_list=[<span class="string">"xx@gmail.com"</span>,<span class="string">"xx@126.com"</span>,<span class="string">"xx@hotmail.com"</span>]</span><br><span class="line"><span class="comment">#####################</span></span><br><span class="line"><span class="comment">#Set server, account, password and email postfix</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span><br><span class="line"># no tls</span><br><span class="line">mail_host="smtp.126.com"</span><br><span class="line">mail_user="xx" #用户名</span><br><span class="line">mail_pass="xx" #密码</span><br><span class="line">mail_postfix="126.com"</span><br><span class="line">'''</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#tls</span></span><br><span class="line">mail_host=<span class="string">"smtp-mail.outlook.com:587"</span></span><br><span class="line">mail_user=<span class="string">"xx@hotmail.com"</span></span><br><span class="line">mail_pass=<span class="string">"xx"</span></span><br><span class="line">mail_postfix=<span class="string">"hotmail.com"</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span><br><span class="line">#tls</span><br><span class="line">mail_host="smtp.gmail.com:587"</span><br><span class="line">mail_user="xx@gmail.com"</span><br><span class="line">mail_pass="xx"</span><br><span class="line">mail_postfix="gmail.com"</span><br><span class="line">'''</span></span><br><span class="line"><span class="comment">######################</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">send_mail</span><span class="params">(to_list,sub,content)</span>:</span></span><br><span class="line">    <span class="string">'''</span><br><span class="line">    to_list: to address</span><br><span class="line">    sub:subject</span><br><span class="line">    content:content</span><br><span class="line">    send_mail("aaa@126.com","sub","content")</span><br><span class="line">    '''</span></span><br><span class="line">    me=mail_user+<span class="string">"&lt;"</span>+mail_user+<span class="string">"@"</span>+mail_postfix+<span class="string">"&gt;"</span></span><br><span class="line">    msg = MIMEText(content)</span><br><span class="line">    msg[<span class="string">'Subject'</span>] = sub</span><br><span class="line">    msg[<span class="string">'From'</span>] = me</span><br><span class="line">    msg[<span class="string">'To'</span>] = <span class="string">";"</span>.join(to_list)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        s = smtplib.SMTP()</span><br><span class="line">        s.connect(mail_host)</span><br><span class="line">        s.starttls() <span class="comment"># TLS need this</span></span><br><span class="line">        s.login(mail_user,mail_pass)</span><br><span class="line">        s.sendmail(me, to_list, msg.as_string())</span><br><span class="line">        s.close()</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">    <span class="keyword">except</span> Exception, e:</span><br><span class="line">        <span class="keyword">print</span> str(e)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line">current_ip = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getip</span><span class="params">()</span>:</span></span><br><span class="line">    sock = socket.create_connection((<span class="string">'ns1.dnspod.net'</span>, <span class="number">6666</span>))</span><br><span class="line">    ip = sock.recv(<span class="number">16</span>)</span><br><span class="line">    sock.close()</span><br><span class="line">    <span class="keyword">return</span> ip</span><br><span class="line"></span><br><span class="line"><span class="string">'''</span><br><span class="line">def getip():</span><br><span class="line">    f = urllib.urlopen("http://www.canyouseeme.org/")</span><br><span class="line">    html_doc = f.read()</span><br><span class="line">    f.close()</span><br><span class="line">    m = re.search('(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)',html_doc)</span><br><span class="line">    print m.group(0)</span><br><span class="line">    data=m.group()</span><br><span class="line">    return data</span><br><span class="line">'''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            ip = getip()</span><br><span class="line">            <span class="comment">#print ip</span></span><br><span class="line">            <span class="keyword">if</span> current_ip != ip:</span><br><span class="line">                <span class="keyword">if</span> send_mail(mailto_list,<span class="string">"Raspberry Pi external ip address"</span>, <span class="string">'Raspberry Pi External IP Addreds is '</span> + ip + <span class="string">' ...!'</span>):</span><br><span class="line">                    current_ip = ip</span><br><span class="line">                    <span class="comment">#print('Send OK')</span></span><br><span class="line">        <span class="keyword">except</span> Exception, e:</span><br><span class="line">            <span class="keyword">print</span> e</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">        time.sleep(<span class="number">60</span>) <span class="comment"># Check the ip address every one minute</span></span><br></pre></td></tr></table></figure>
+<p>编辑文件rc.local，设置开机自动运行</p>
+<pre><code>sudo vim /etc/rc.<span class="keyword">local</span>
+</code></pre><p>在 exit 0 之前， 加入以下代码：<br>su root -c “python /home/pi/external_ip.py”</p>
+<p>简单介绍一下上面的脚的功能，树莓派开机自动获取公网IP地址并发送到指定邮箱，然后每分钟监测IP是否发生变化，如果变了，则发送变化之后的IP到指定邮箱。需要修改的地方如下：<br>mailto_list里面填想要收到IP的邮箱，可以填多个，发送邮箱我列出了三个邮箱，126，hotmail，gmail（可能被墙，不建议使用），根据自己情况选择一个，如果想用其他邮箱，请自行修改。关于getip()函数，我列了两个，目前在我这两个都能用，请根据自己实际情况选择。</p>
+<h2 id="动态域名">动态域名</h2><p>如果路由器支持动态域名（DNS）功能，可以选择这种方法，注册一个动态域名服务，比如花生壳等，然后在路由器里面设置动态DNS，如下图所示。</p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi-nas-remote-management/figure1.jpg_mkitby" alt=""><br></div>
+
+<h1 id="外网远程登录树莓派SSH">外网远程登录树莓派SSH</h1><p>这种方法我想大家应该不陌生了，前面我们操作树莓派，都是通过登录SSH，只不过是内网登录。外网登录其实没什么区别，就是需要在路由器上做端口映射。<br>如果你所在网络对外只开放了80和8080等web端口，那么这种方法就不怎么好使了，需要修改SSH端口号为80端口，还有更糟糕的情况，恰好你的网络供应商封锁了80和8080等web端口(<a href="http://www.canyouseeme.org/可以查询)，就像我一样，握个抓，目前我所知道的简单有效的方法是用手机来登录SSH，Android平台推荐使用JuiceSSH，有虚拟键键盘，可以很方便输入Tab" target="_blank" rel="external">http://www.canyouseeme.org/可以查询)，就像我一样，握个抓，目前我所知道的简单有效的方法是用手机来登录SSH，Android平台推荐使用JuiceSSH，有虚拟键键盘，可以很方便输入Tab</a>, Ctrl等特殊按键，音量键放大缩小字体，可旋转成横屏，甩ConnectBot几条街，IOS平台可以使用Serverauditor。另外可以通过搭建代理转发服务来实现登录如果还有其他好方法，也欢迎分享。</p>
+<h1 id="基于Web的SSH">基于Web的SSH</h1><p>如果幸运，web端口没有被封，那么可以采用基于web的SSH，在任何有网络的地方，只需要浏览器就就可以搞定一切。基于web的SSH软件有很多，我也不一一介绍了，感兴趣的可以自己参考 ，下面我以shellinabox为例介绍，<br>先安装，</p>
+<pre><code>sudo apt-<span class="keyword">get</span> install shellinabox -y
+</code></pre><p>然后编辑shellinabox配置文件</p>
+<pre><code>sudo vim <span class="regexp">/etc/</span><span class="keyword">default</span><span class="regexp">/shellinaboxd</span>
+</code></pre><p>更改SHELLINABOX_PORT=4200，为想要的端口。</p>
+<pre><code><span class="preprocessor"># Should shellinaboxd start automatically</span>
+SHELLINABOX_DAEMON_START=<span class="number">1</span>
+
+<span class="preprocessor"># TCP port that shellinboxd's webserver listens on</span>
+SHELLINABOX_PORT=<span class="number">4200</span>
+
+<span class="preprocessor"># Parameters that are managed by the system and usually should not need</span>
+<span class="preprocessor"># changing:</span>
+<span class="preprocessor"># SHELLINABOX_DATADIR=/var/lib/shellinabox</span>
+<span class="preprocessor"># SHELLINABOX_USER=shellinabox</span>
+<span class="preprocessor"># SHELLINABOX_GROUP=shellinabox</span>
+
+<span class="preprocessor"># Any optional arguments (e.g. extra service definitions).  Make sure</span>
+<span class="preprocessor"># that that argument is quoted.</span>
+<span class="preprocessor">#</span>
+<span class="preprocessor">#   Beeps are disabled because of reports of the VLC plugin crashing</span>
+<span class="preprocessor">#   Firefox on Linux/x86_64.</span>
+SHELLINABOX_ARGS=<span class="string">"--no-beep"</span>
+</code></pre><p>重启shelinabox服务。</p>
+<pre><code><span class="title">sudo</span> service shellinabox restart
+</code></pre><p>现在，去你的客户端系统，打开Web浏览器并导航到：<a href="https://ip-address-of-remote-servers:4200。" target="_blank" rel="external">https://ip-address-of-remote-servers:4200。</a><br>如果你改变了端口，请填写修改后的端口。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>有时候我们可能需要在外网环境下控制家里面的树莓派，根据实际网络情况，提供下面两个方案供选择。</p>
+<ul>
+<li>外网远程登录树莓派SSH</li>
+<li>基于Web的SSH</li>
+</ul>
+<p>在详细介绍这两种方案之前，我们需要先解决一个问题，如何获取树莓派外网（公网）IP地址？我们的树莓派一般处于路由器后面，外网不可见。</p>]]>
+    
+    </summary>
+    
+      <category term="DIY" scheme="http://mkitby.com/tags/DIY/"/>
+    
+      <category term="NAS" scheme="http://mkitby.com/tags/NAS/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/tags/Raspberry-Pi/"/>
+    
+      <category term="树莓派" scheme="http://mkitby.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+      <category term="远程管理" scheme="http://mkitby.com/tags/%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/categories/Raspberry-Pi/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Raspberry Pi从零开始搭建低成本NAS(8)-迅雷远程下载]]></title>
+    <link href="http://mkitby.com/2016/04/06/raspberry-pi-nas-remote-download-xunlei/"/>
+    <id>http://mkitby.com/2016/04/06/raspberry-pi-nas-remote-download-xunlei/</id>
+    <published>2016-04-06T15:17:00.000Z</published>
+    <updated>2016-04-08T13:31:13.166Z</updated>
+    <content type="html"><![CDATA[<p>接着之前aria2远程下载，来介绍迅雷远程下载。</p>
+<a id="more"></a>
+<p>第一步，去迅雷网站下载固件。<a href="http://luyou.xunlei.com/forum-51-1.html" target="_blank" rel="external">http://luyou.xunlei.com/forum-51-1.html</a> 找到最近的下载就可以了，注意Raspberry Pi 使用的是Xware版本号_armel_v5te_glibc.zip。我是用的是第九周的固件“Xware1.0.31_armel_v5te_glibc.zip”。</p>
+<p>第二步，在/home/pi文件夹下建立一个文件夹(文件名随便，本文使用xunlei)。</p>
+<pre><code><span class="built_in">cd</span> /home/pi
+<span class="built_in">mkdir</span> xunlei
+</code></pre><p>第三步，在/home/pi/nas-data 文件夹下建立一个文件夹(文件名随便，本文也使用xunlei)。</p>
+<pre><code><span class="built_in">cd</span> /home/pi/nas-data
+<span class="built_in">mkdir</span> xunlei
+</code></pre><p>第四步，将两者挂载起来。</p>
+<pre><code>sudo mount --bind <span class="regexp">/home/</span>pi<span class="regexp">/xunlei /</span>home<span class="regexp">/pi/</span>nas-data<span class="regexp">/xunlei</span>
+</code></pre><p>第五步，然后把迅雷固件复制到/home/pi/xunlei文件夹</p>
+<pre><code>cd /home/pi
+cp Xware1<span class="number">.0</span><span class="number">.31</span>_armel_v5te_glibc.zip xunlei
+</code></pre><p>第六步，解压Xware1.0.9_armel_v5te_glibc.zip</p>
+<pre><code><span class="tag">cd</span> <span class="tag">xunlei</span>
+<span class="tag">unzip</span> <span class="tag">Xware1</span><span class="class">.0</span><span class="class">.9_armel_v5te_glibc</span><span class="class">.zip</span>
+</code></pre><p>第七步，修改读写权限</p>
+<pre><code>sudo chmod -R <span class="number">777</span> <span class="regexp">/home/</span>pi/xunlei
+sudo chmod -R <span class="number">777</span> <span class="regexp">/home/</span>pi<span class="regexp">/nas-data/</span>xunlei
+</code></pre><p>第八步，运行迅雷，查看code</p>
+<pre><code><span class="regexp">/home/</span>pi<span class="regexp">/xunlei/</span>portal
+</code></pre><p>如果提示权限不够，运行</p>
+<pre><code>sudo <span class="regexp">/home/</span>pi<span class="regexp">/xunlei/</span>portal
+</code></pre><p>运行结果如下图所示：</p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure1.jpg_mkitby" alt=""><br></div>
+
+<p>牢记上面的Code，我的是qaefef。 在浏览器输入当前树莓派的IP：<a href="http://IP:9001/getsysinfo" target="_blank" rel="external">http://IP:9001/getsysinfo</a></p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure2.jpg_mkitby" alt=""><br></div>
+
+<p>第一项：0表示返回结果成功<br>第二项： 1表示检测网络正常，0表示检测网络异常<br>第四项： 1表示已绑定成功，0表示未绑定<br>第五项： 未绑定的情况下，为绑定的需要的激活码   （这里获得的激活码呆会绑定要用，激活码不需要购买，ps迅雷远程下载不是破解的，是官方发布的）<br>第六项： 1表示磁盘挂载检测成功，0表示磁盘挂载检测失败<br>使用迅雷帐号登录迅雷远程下载页面<a href="http://yuancheng.xunlei.com，点【添加】，并填入激活码，点【确定】即绑定成功。当绑定成功后红色叉处即可解除绑定。" target="_blank" rel="external">http://yuancheng.xunlei.com，点【添加】，并填入激活码，点【确定】即绑定成功。当绑定成功后红色叉处即可解除绑定。</a><br>第九步，让我们绑定Pi设备到远程下载。<br>游览器访问<a href="http://yuancheng.xunlei.com，点击左上角的【添加】按钮，在弹出的对话框里面输入刚刚的激活码：qaefef，如下图：" target="_blank" rel="external">http://yuancheng.xunlei.com，点击左上角的【添加】按钮，在弹出的对话框里面输入刚刚的激活码：qaefef，如下图：</a></p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure3.jpg_mkitby" alt=""><br></div>
+
+<p>第十步，保险起见，让我们再去把目录的权限再设置一下吧，因为已经生成了新的文件了</p>
+<pre><code>sudo chmod -R <span class="number">777</span> <span class="regexp">/home/</span>pi/xunlei
+sudo chmod -R <span class="number">777</span> <span class="regexp">/home/</span>pi<span class="regexp">/nas-data/</span>xunlei
+</code></pre><p>第十一步，在<a href="http://yuancheng.xunlei.com里面新建个任务试试看。和一般的迅雷操作差不多的。注意下载器选择树莓派" target="_blank" rel="external">http://yuancheng.xunlei.com里面新建个任务试试看。和一般的迅雷操作差不多的。注意下载器选择树莓派</a></p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure4.jpg_mkitby" alt=""><br></div>
+
+<p>第十二步，下载的文件在哪里？<br>Xware软件会自动检测在机器上已经mount的，且有写入权限的设备，如果有，在远程下载页面中添加下载任务时就可以看到。如果有多个可写入的设备，那就依次编号为C、D、E…等，可以在添加下载任务时选择其中一个。</p>
+<pre><code>cd <span class="regexp">/home/</span>pi<span class="regexp">/xunlei/</span>TDDOWNLOAD
+</code></pre><p>下载目录 /home/pi/nas-data/TDDOWNLOAD</p>
+<p>最后设置开机自动绑定，并且自动启动迅雷。</p>
+<pre><code>sudo vim /etc/rc.<span class="keyword">local</span>
+</code></pre><p>在 exit 0 之前， 加入以下代码：</p>
+<pre><code>sudo mount --bind <span class="regexp">/home/</span>pi<span class="regexp">/xunlei/</span> <span class="regexp">/home/</span>pi<span class="regexp">/nas-data/</span>xunlei/
+.<span class="regexp">/home/</span>pi<span class="regexp">/xunlei/</span>portal
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<p>接着之前aria2远程下载，来介绍迅雷远程下载。</p>]]>
+    
+    </summary>
+    
+      <category term="DIY" scheme="http://mkitby.com/tags/DIY/"/>
+    
+      <category term="NAS" scheme="http://mkitby.com/tags/NAS/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/tags/Raspberry-Pi/"/>
+    
+      <category term="树莓派" scheme="http://mkitby.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+      <category term="远程下载" scheme="http://mkitby.com/tags/%E8%BF%9C%E7%A8%8B%E4%B8%8B%E8%BD%BD/"/>
+    
+      <category term="Raspberry Pi" scheme="http://mkitby.com/categories/Raspberry-Pi/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Raspberry Pi从零开始搭建低成本NAS(7)-Aria2远程下载]]></title>
+    <link href="http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download-aria2/"/>
+    <id>http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download-aria2/</id>
+    <published>2016-01-15T14:30:44.000Z</published>
+    <updated>2016-04-08T13:29:59.312Z</updated>
+    <content type="html"><![CDATA[<p>远程下载内容比较多，所以分为两篇文章，先介绍Aria2，再介绍迅雷。</p>
 <p>Aria2是一个轻量级命令行下载工具，支持HTTP/HTTPS, FTP, SFTP, BitTorrent and Metalink下载，但是不支持ed2k，支持JSON-RPC和XML-RPC调用，可以远程控制。</p>
+<a id="more"></a>
 <p>1.先安装aria2</p>
 <pre><code>sudo apt-<span class="keyword">get</span> install aria2 –y
 </code></pre><p>2.创建 aria2 配置文件 “/home/pi/.aria2/aria2.conf” 和 “/home/pi/.aria2/aria2.session” 这个文件 (我是以 pi 账户启动 aria2 的),</p>
@@ -109,7 +364,8 @@ sudo chmod -R 0755 /<span class="keyword">var</span>/www/html
 <p>这三种情况下都需要动态域名来绑定到路由器IP地址。关于动态域名，如果不清楚的，可以参考我后面的文章 Raspberry Pi从零开始搭建低成本NAS(10)-外网登录树莓派。里面会介绍动态域名，还会介绍不通过动态域名，如何在外网来访问树莓派。</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>远程下载内容比较多，所以分为两篇文章，先介绍Aria2，再介绍迅雷。</p>]]>
+    <![CDATA[<p>远程下载内容比较多，所以分为两篇文章，先介绍Aria2，再介绍迅雷。</p>
+<p>Aria2是一个轻量级命令行下载工具，支持HTTP/HTTPS, FTP, SFTP, BitTorrent and Metalink下载，但是不支持ed2k，支持JSON-RPC和XML-RPC调用，可以远程控制。</p>]]>
     
     </summary>
     
@@ -716,7 +972,7 @@ deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.aliyun.c
     <link href="http://mkitby.com/2015/11/05/raspberry-pi-nas-starting/"/>
     <id>http://mkitby.com/2015/11/05/raspberry-pi-nas-starting/</id>
     <published>2015-11-05T11:38:37.000Z</published>
-    <updated>2015-12-09T12:56:49.552Z</updated>
+    <updated>2016-04-08T13:40:50.145Z</updated>
     <content type="html"><![CDATA[<p>入手树莓派也差不多四五个月了，其实最初就是想弄一台离线下载机，最开始是在网上买了一台HG255D路由器来实现离线下载，最后发现配置太差，根本满足不了需求，直接扔一边了。后面树莓派进入我的视线，配置也还行，可玩性比较高，随后入手。目前这台迷你型服务器已经稳定运行三个多月了，总是听说linux稳定，现在自己是体会到了。</p>
 <a id="more"></a>
 <div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-starting/figure1.jpg_mkitby" alt=""><br></div>
@@ -728,12 +984,12 @@ deb-src <span class="symbol">http:</span>/<span class="regexp">/mirrors.aliyun.c
 <li><a href="/2015/11/05/raspberry-pi-nas-os-install/">Raspberry Pi从零开始搭建低成本NAS(3)-系统安装</a></li>
 <li><a href="/2015/11/05/raspberry-pi-nas-storage-device/">Raspberry Pi从零开始搭建低成本NAS(4)-存储设备</a></li>
 <li><a href="/2015/11/09/raspberry-pi-nas-upnp-dlna/">Raspberry Pi从零开始搭建低成本NAS(5)-UPNP/DLNA多媒体</a></li>
-<li>Raspberry Pi从零开始搭建低成本NAS(6)-文件共享</li>
-<li>Raspberry Pi从零开始搭建低成本NAS(7)-远程下载</li>
-<li>Raspberry Pi从零开始搭建低成本NAS(8)-DNS服务器</li>
-<li>Raspberry Pi从零开始搭建低成本NAS(9)-硬盘功耗管理</li>
-<li>Raspberry Pi从零开始搭建低成本NAS(10)-外网登录树莓派</li>
-<li>Raspberry Pi从零开始搭建低成本NAS(11)-监控关键服务</li>
+<li><a href="/2015/12/08/raspberry-pi-nas-file-sharing/">Raspberry Pi从零开始搭建低成本NAS(6)-文件共享</a></li>
+<li><a href="/2016/01/15/raspberry-pi-nas-remote-download-aria2/">Raspberry Pi从零开始搭建低成本NAS(7)-Aria2远程下载</a></li>
+<li><a href="/2016/04/06/raspberry-pi-nas-remote-download-xunlei/">Raspberry Pi从零开始搭建低成本NAS(8)-迅雷远程下载</a></li>
+<li><a href="/2016/04/07/raspberry-pi-nas-remote-management/">Raspberry Pi从零开始搭建低成本NAS(9)-外网登录树莓派</a></li>
+<li><a href="/2016/04/08/raspberry-pi-nas-monitor/">Raspberry Pi从零开始搭建低成本NAS(10)-监控关键服务</a></li>
+<li>Raspberry Pi从零开始搭建低成本NAS(11)-硬盘功耗管理</li>
 <li>Raspberry Pi从零开始搭建低成本NAS(12)-操作系统备份</li>
 </ol>
 <embed height="452" width="544" quality="high" allowfullscreen="true" type="application/x-shockwave-flash" src="http://share.acg.tv/flash.swf" flashvars="aid=3186450&page=1" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">

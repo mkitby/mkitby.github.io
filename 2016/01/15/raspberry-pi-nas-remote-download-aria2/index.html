@@ -55,16 +55,19 @@
 
 
 
-<meta name="description" content="远程下载内容比较多，所以分为两篇文章，先介绍Aria2，再介绍迅雷。">
+<meta name="description" content="远程下载内容比较多，所以分为两篇文章，先介绍Aria2，再介绍迅雷。
+Aria2是一个轻量级命令行下载工具，支持HTTP/HTTPS, FTP, SFTP, BitTorrent and Metalink下载，但是不支持ed2k，支持JSON-RPC和XML-RPC调用，可以远程控制。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Raspberry Pi从零开始搭建低成本NAS(7)-Aria2远程下载">
-<meta property="og:url" content="http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download/index.html">
+<meta property="og:url" content="http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download-aria2/index.html">
 <meta property="og:site_name" content="mkitby's Blog">
-<meta property="og:description" content="远程下载内容比较多，所以分为两篇文章，先介绍Aria2，再介绍迅雷。">
-<meta property="og:updated_time" content="2016-01-15T15:40:52.063Z">
+<meta property="og:description" content="远程下载内容比较多，所以分为两篇文章，先介绍Aria2，再介绍迅雷。
+Aria2是一个轻量级命令行下载工具，支持HTTP/HTTPS, FTP, SFTP, BitTorrent and Metalink下载，但是不支持ed2k，支持JSON-RPC和XML-RPC调用，可以远程控制。">
+<meta property="og:updated_time" content="2016-04-08T13:29:59.312Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Raspberry Pi从零开始搭建低成本NAS(7)-Aria2远程下载">
-<meta name="twitter:description" content="远程下载内容比较多，所以分为两篇文章，先介绍Aria2，再介绍迅雷。">
+<meta name="twitter:description" content="远程下载内容比较多，所以分为两篇文章，先介绍Aria2，再介绍迅雷。
+Aria2是一个轻量级命令行下载工具，支持HTTP/HTTPS, FTP, SFTP, BitTorrent and Metalink下载，但是不支持ed2k，支持JSON-RPC和XML-RPC调用，可以远程控制。">
 
 
 
@@ -291,8 +294,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/01/15/raspberry-pi-nas-remote-download/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/15/raspberry-pi-nas-remote-download/" itemprop="commentsCount"></span>
+                <a href="/2016/01/15/raspberry-pi-nas-remote-download-aria2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/15/raspberry-pi-nas-remote-download-aria2/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -312,8 +315,8 @@
 
       
         <span itemprop="articleBody"><p>远程下载内容比较多，所以分为两篇文章，先介绍Aria2，再介绍迅雷。</p>
-<a id="more"></a>
 <p>Aria2是一个轻量级命令行下载工具，支持HTTP/HTTPS, FTP, SFTP, BitTorrent and Metalink下载，但是不支持ed2k，支持JSON-RPC和XML-RPC调用，可以远程控制。</p>
+<a id="more"></a>
 <p>1.先安装aria2</p>
 <pre><code>sudo apt-<span class="keyword">get</span> install aria2 –y
 </code></pre><p>2.创建 aria2 配置文件 “/home/pi/.aria2/aria2.conf” 和 “/home/pi/.aria2/aria2.session” 这个文件 (我是以 pi 账户启动 aria2 的),</p>
@@ -431,6 +434,10 @@ sudo chmod -R 0755 /<span class="keyword">var</span>/www/html
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2016/04/06/raspberry-pi-nas-remote-download-xunlei/" rel="prev" title="Raspberry Pi从零开始搭建低成本NAS(8)-迅雷远程下载">
+                Raspberry Pi从零开始搭建低成本NAS(8)-迅雷远程下载 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -479,8 +486,8 @@ sudo chmod -R 0755 /<span class="keyword">var</span>/www/html
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/01/15/raspberry-pi-nas-remote-download/"
-           data-title="Raspberry Pi从零开始搭建低成本NAS(7)-Aria2远程下载" data-url="http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download/">
+      <div class="ds-thread" data-thread-key="2016/01/15/raspberry-pi-nas-remote-download-aria2/"
+           data-title="Raspberry Pi从零开始搭建低成本NAS(7)-Aria2远程下载" data-url="http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download-aria2/">
       </div>
     
   </div>
@@ -524,7 +531,7 @@ sudo chmod -R 0755 /<span class="keyword">var</span>/www/html
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -538,7 +545,7 @@ sudo chmod -R 0755 /<span class="keyword">var</span>/www/html
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

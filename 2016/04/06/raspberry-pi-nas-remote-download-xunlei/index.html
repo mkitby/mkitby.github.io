@@ -37,7 +37,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="DIY,NAS,Raspberry Pi,树莓派," />
+  <meta name="keywords" content="DIY,NAS,Raspberry Pi,树莓派,远程下载," />
 
 
 
@@ -55,37 +55,20 @@
 
 
 
-<meta name="description" content="所需硬件下面列出所需硬件，注意有的是可选
-
-Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)
-散热片（两片）+外壳(带风扇)，一天24小时开机，这个还是有必要。也不贵，二三十块钱，某宝就有
-5V 2A电源， Micro USB线用来供电
-16 G micro SD card(class 10+)， 至少16 G, 不然后面没得玩
-移">
+<meta name="description" content="接着之前aria2远程下载，来介绍迅雷远程下载。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Raspberry Pi从零开始搭建低成本NAS(2)-硬件组装">
-<meta property="og:url" content="http://mkitby.com/2015/11/05/raspberry-pi-nas-hw-assembly/index.html">
+<meta property="og:title" content="Raspberry Pi从零开始搭建低成本NAS(8)-迅雷远程下载">
+<meta property="og:url" content="http://mkitby.com/2016/04/06/raspberry-pi-nas-remote-download-xunlei/index.html">
 <meta property="og:site_name" content="mkitby's Blog">
-<meta property="og:description" content="所需硬件下面列出所需硬件，注意有的是可选
-
-Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)
-散热片（两片）+外壳(带风扇)，一天24小时开机，这个还是有必要。也不贵，二三十块钱，某宝就有
-5V 2A电源， Micro USB线用来供电
-16 G micro SD card(class 10+)， 至少16 G, 不然后面没得玩
-移">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-hw-assembly/figure1.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-hw-assembly/figure2.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-hw-assembly/figure3.jpg_mkitby">
-<meta property="og:updated_time" content="2015-12-09T12:56:54.542Z">
+<meta property="og:description" content="接着之前aria2远程下载，来介绍迅雷远程下载。">
+<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure1.jpg_mkitby">
+<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure2.jpg_mkitby">
+<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure3.jpg_mkitby">
+<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure4.jpg_mkitby">
+<meta property="og:updated_time" content="2016-04-08T13:31:13.166Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Raspberry Pi从零开始搭建低成本NAS(2)-硬件组装">
-<meta name="twitter:description" content="所需硬件下面列出所需硬件，注意有的是可选
-
-Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)
-散热片（两片）+外壳(带风扇)，一天24小时开机，这个还是有必要。也不贵，二三十块钱，某宝就有
-5V 2A电源， Micro USB线用来供电
-16 G micro SD card(class 10+)， 至少16 G, 不然后面没得玩
-移">
+<meta name="twitter:title" content="Raspberry Pi从零开始搭建低成本NAS(8)-迅雷远程下载">
+<meta name="twitter:description" content="接着之前aria2远程下载，来介绍迅雷远程下载。">
 
 
 
@@ -97,7 +80,7 @@ Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)
   };
 </script>
 
-  <title> Raspberry Pi从零开始搭建低成本NAS(2)-硬件组装 | mkitby's Blog </title>
+  <title> Raspberry Pi从零开始搭建低成本NAS(8)-迅雷远程下载 | mkitby's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -277,7 +260,7 @@ Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)
             
             
               
-                Raspberry Pi从零开始搭建低成本NAS(2)-硬件组装
+                Raspberry Pi从零开始搭建低成本NAS(8)-迅雷远程下载
               
             
           </h1>
@@ -286,8 +269,8 @@ Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-11-05T22:04:14+08:00" content="2015-11-05">
-              2015-11-05
+            <time itemprop="dateCreated" datetime="2016-04-06T23:17:00+08:00" content="2016-04-06">
+              2016-04-06
             </time>
           </span>
 
@@ -312,8 +295,8 @@ Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/11/05/raspberry-pi-nas-hw-assembly/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/05/raspberry-pi-nas-hw-assembly/" itemprop="commentsCount"></span>
+                <a href="/2016/04/06/raspberry-pi-nas-remote-download-xunlei/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/06/raspberry-pi-nas-remote-download-xunlei/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -332,33 +315,54 @@ Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)
       
 
       
-        <span itemprop="articleBody"><h1 id="所需硬件">所需硬件</h1><p>下面列出所需硬件，注意有的是可选</p>
-<ul>
-<li>Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)</li>
-<li>散热片（两片）+外壳(带风扇)，一天24小时开机，这个还是有必要。也不贵，二三十块钱，某宝就有</li>
-<li>5V 2A电源， Micro USB线用来供电</li>
-<li>16 G micro SD card(class 10+)， 至少16 G, 不然后面没得玩</li>
-<li>移动硬盘或者U盘</li>
-<li>USB集线器带外接电源(可选， 最好配一个)</li>
-<li>USB wifi dongle(可选)：</li>
-</ul>
+        <span itemprop="articleBody"><p>接着之前aria2远程下载，来介绍迅雷远程下载。</p>
 <a id="more"></a>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-hw-assembly/figure1.jpg_mkitby" alt=""><br>&gt;Figure 1. 所需硬件<br></div>
+<p>第一步，去迅雷网站下载固件。<a href="http://luyou.xunlei.com/forum-51-1.html" target="_blank" rel="external">http://luyou.xunlei.com/forum-51-1.html</a> 找到最近的下载就可以了，注意Raspberry Pi 使用的是Xware版本号_armel_v5te_glibc.zip。我是用的是第九周的固件“Xware1.0.31_armel_v5te_glibc.zip”。</p>
+<p>第二步，在/home/pi文件夹下建立一个文件夹(文件名随便，本文使用xunlei)。</p>
+<pre><code><span class="built_in">cd</span> /home/pi
+<span class="built_in">mkdir</span> xunlei
+</code></pre><p>第三步，在/home/pi/nas-data 文件夹下建立一个文件夹(文件名随便，本文也使用xunlei)。</p>
+<pre><code><span class="built_in">cd</span> /home/pi/nas-data
+<span class="built_in">mkdir</span> xunlei
+</code></pre><p>第四步，将两者挂载起来。</p>
+<pre><code>sudo mount --bind <span class="regexp">/home/</span>pi<span class="regexp">/xunlei /</span>home<span class="regexp">/pi/</span>nas-data<span class="regexp">/xunlei</span>
+</code></pre><p>第五步，然后把迅雷固件复制到/home/pi/xunlei文件夹</p>
+<pre><code>cd /home/pi
+cp Xware1<span class="number">.0</span><span class="number">.31</span>_armel_v5te_glibc.zip xunlei
+</code></pre><p>第六步，解压Xware1.0.9_armel_v5te_glibc.zip</p>
+<pre><code><span class="tag">cd</span> <span class="tag">xunlei</span>
+<span class="tag">unzip</span> <span class="tag">Xware1</span><span class="class">.0</span><span class="class">.9_armel_v5te_glibc</span><span class="class">.zip</span>
+</code></pre><p>第七步，修改读写权限</p>
+<pre><code>sudo chmod -R <span class="number">777</span> <span class="regexp">/home/</span>pi/xunlei
+sudo chmod -R <span class="number">777</span> <span class="regexp">/home/</span>pi<span class="regexp">/nas-data/</span>xunlei
+</code></pre><p>第八步，运行迅雷，查看code</p>
+<pre><code><span class="regexp">/home/</span>pi<span class="regexp">/xunlei/</span>portal
+</code></pre><p>如果提示权限不够，运行</p>
+<pre><code>sudo <span class="regexp">/home/</span>pi<span class="regexp">/xunlei/</span>portal
+</code></pre><p>运行结果如下图所示：</p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure1.jpg_mkitby" alt=""><br></div>
 
-<h1 id="硬件安装">硬件安装</h1><p>整个板子详细介绍，参考<a href="http://www.raspberrypi-spy.co.uk/2015/02/introducing-the-raspberry-pi-2-model-b/" target="_blank" rel="external">http://www.raspberrypi-spy.co.uk/2015/02/introducing-the-raspberry-pi-2-model-b/</a>，输出接口定义可以如图Figure 2所示。</p>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-hw-assembly/figure2.jpg_mkitby" alt=""><br>Figure 2. Raspberry Pi 2B输出接口定义<br></div>
+<p>牢记上面的Code，我的是qaefef。 在浏览器输入当前树莓派的IP：<a href="http://IP:9001/getsysinfo" target="_blank" rel="external">http://IP:9001/getsysinfo</a></p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure2.jpg_mkitby" alt=""><br></div>
 
-<p>查看每个pin的详细信息，参考<a href="http://pi.gadgetoid.com/pinout/" target="_blank" rel="external">http://pi.gadgetoid.com/pinout/</a>，Raspberry Pi 2 Model B的GPIO引脚信息如图Figure 3所示。插头的4（+5V电源），6(地)引脚接风扇电源线，注意正负极别接反了。</p>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-hw-assembly/figure3.jpg_mkitby" alt=""><br>Figure 3. Raspberry Pi 2 Model B GPIO Header<br></div>
+<p>第一项：0表示返回结果成功<br>第二项： 1表示检测网络正常，0表示检测网络异常<br>第四项： 1表示已绑定成功，0表示未绑定<br>第五项： 未绑定的情况下，为绑定的需要的激活码   （这里获得的激活码呆会绑定要用，激活码不需要购买，ps迅雷远程下载不是破解的，是官方发布的）<br>第六项： 1表示磁盘挂载检测成功，0表示磁盘挂载检测失败<br>使用迅雷帐号登录迅雷远程下载页面<a href="http://yuancheng.xunlei.com，点【添加】，并填入激活码，点【确定】即绑定成功。当绑定成功后红色叉处即可解除绑定。" target="_blank" rel="external">http://yuancheng.xunlei.com，点【添加】，并填入激活码，点【确定】即绑定成功。当绑定成功后红色叉处即可解除绑定。</a><br>第九步，让我们绑定Pi设备到远程下载。<br>游览器访问<a href="http://yuancheng.xunlei.com，点击左上角的【添加】按钮，在弹出的对话框里面输入刚刚的激活码：qaefef，如下图：" target="_blank" rel="external">http://yuancheng.xunlei.com，点击左上角的【添加】按钮，在弹出的对话框里面输入刚刚的激活码：qaefef，如下图：</a></p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure3.jpg_mkitby" alt=""><br></div>
 
-<p>以上是进行硬件组装及DIY需要的一些基本信息, 贴在这方便以后查找需要。安装步骤很简单,</p>
-<ol>
-<li>拿起树莓派板子，看清楚各种插槽接口，搞清楚是干嘛的，小心插坏了~</li>
-<li>按照Figure 1所示，给两片芯片贴上散热片，要买那种自带粘胶的，手不要抖哦，小心贴歪了。</li>
-<li>按照Figure 1所示，把风扇的电源插头接到电源引脚上，然后接上电源看风扇转不。</li>
-<li>没什么问题就装上外壳。</li>
-</ol>
-</span>
+<p>第十步，保险起见，让我们再去把目录的权限再设置一下吧，因为已经生成了新的文件了</p>
+<pre><code>sudo chmod -R <span class="number">777</span> <span class="regexp">/home/</span>pi/xunlei
+sudo chmod -R <span class="number">777</span> <span class="regexp">/home/</span>pi<span class="regexp">/nas-data/</span>xunlei
+</code></pre><p>第十一步，在<a href="http://yuancheng.xunlei.com里面新建个任务试试看。和一般的迅雷操作差不多的。注意下载器选择树莓派" target="_blank" rel="external">http://yuancheng.xunlei.com里面新建个任务试试看。和一般的迅雷操作差不多的。注意下载器选择树莓派</a></p>
+<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure4.jpg_mkitby" alt=""><br></div>
+
+<p>第十二步，下载的文件在哪里？<br>Xware软件会自动检测在机器上已经mount的，且有写入权限的设备，如果有，在远程下载页面中添加下载任务时就可以看到。如果有多个可写入的设备，那就依次编号为C、D、E…等，可以在添加下载任务时选择其中一个。</p>
+<pre><code>cd <span class="regexp">/home/</span>pi<span class="regexp">/xunlei/</span>TDDOWNLOAD
+</code></pre><p>下载目录 /home/pi/nas-data/TDDOWNLOAD</p>
+<p>最后设置开机自动绑定，并且自动启动迅雷。</p>
+<pre><code>sudo vim /etc/rc.<span class="keyword">local</span>
+</code></pre><p>在 exit 0 之前， 加入以下代码：</p>
+<pre><code>sudo mount --bind <span class="regexp">/home/</span>pi<span class="regexp">/xunlei/</span> <span class="regexp">/home/</span>pi<span class="regexp">/nas-data/</span>xunlei/
+.<span class="regexp">/home/</span>pi<span class="regexp">/xunlei/</span>portal
+</code></pre></span>
       
     </div>
 
@@ -374,6 +378,8 @@ Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)
           
             <a href="/tags/树莓派/" rel="tag">#树莓派</a>
           
+            <a href="/tags/远程下载/" rel="tag">#远程下载</a>
+          
         </div>
       
 
@@ -381,16 +387,16 @@ Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/05/raspberry-pi-nas-starting/" rel="next" title="Raspberry Pi从零开始搭建低成本NAS(1)-开篇">
-                <i class="fa fa-chevron-left"></i> Raspberry Pi从零开始搭建低成本NAS(1)-开篇
+              <a href="/2016/01/15/raspberry-pi-nas-remote-download-aria2/" rel="next" title="Raspberry Pi从零开始搭建低成本NAS(7)-Aria2远程下载">
+                <i class="fa fa-chevron-left"></i> Raspberry Pi从零开始搭建低成本NAS(7)-Aria2远程下载
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/11/05/raspberry-pi-nas-os-install/" rel="prev" title="Raspberry Pi从零开始搭建低成本NAS(3)-系统安装">
-                Raspberry Pi从零开始搭建低成本NAS(3)-系统安装 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/04/07/raspberry-pi-nas-remote-management/" rel="prev" title="Raspberry Pi从零开始搭建低成本NAS(9)-外网登录树莓派">
+                Raspberry Pi从零开始搭建低成本NAS(9)-外网登录树莓派 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -441,8 +447,8 @@ Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/11/05/raspberry-pi-nas-hw-assembly/"
-           data-title="Raspberry Pi从零开始搭建低成本NAS(2)-硬件组装" data-url="http://mkitby.com/2015/11/05/raspberry-pi-nas-hw-assembly/">
+      <div class="ds-thread" data-thread-key="2016/04/06/raspberry-pi-nas-remote-download-xunlei/"
+           data-title="Raspberry Pi从零开始搭建低成本NAS(8)-迅雷远程下载" data-url="http://mkitby.com/2016/04/06/raspberry-pi-nas-remote-download-xunlei/">
       </div>
     
   </div>
@@ -557,7 +563,7 @@ Raspberry Pi， 自己的是Raspberry Pi 2 Model B (900MHz, 1G RAM)
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#所需硬件"><span class="nav-number">1.</span> <span class="nav-text">所需硬件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#硬件安装"><span class="nav-number">2.</span> <span class="nav-text">硬件安装</span></a></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
