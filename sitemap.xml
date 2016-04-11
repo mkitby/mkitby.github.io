@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download-aria2/</loc>
+    <lastmod>2016-04-11T12:24:59.558Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://mkitby.com/2016/04/07/raspberry-pi-nas-remote-management/</loc>
+    <lastmod>2016-04-11T12:23:42.753Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://mkitby.com/2015/11/05/raspberry-pi-nas-starting/</loc>
     <lastmod>2016-04-08T13:40:50.145Z</lastmod>
   </url>
@@ -12,18 +22,8 @@
   </url>
   
   <url>
-    <loc>http://mkitby.com/2016/04/07/raspberry-pi-nas-remote-management/</loc>
-    <lastmod>2016-04-08T13:31:23.612Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://mkitby.com/2016/04/06/raspberry-pi-nas-remote-download-xunlei/</loc>
     <lastmod>2016-04-08T13:31:13.166Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download-aria2/</loc>
-    <lastmod>2016-04-08T13:29:59.312Z</lastmod>
   </url>
   
   <url>

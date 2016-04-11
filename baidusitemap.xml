@@ -4,6 +4,62 @@
 
     
   <url>
+    <loc>http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download-aria2/</loc>
+    <lastmod>2016-04-11T12:24:59.558Z</lastmod>
+    <data>
+        <display>
+        <title>Raspberry Pi从零开始搭建低成本NAS(7)-Aria2远程下载</title>
+        <pubTime>2016-01-15T14:30:44.000Z</pubTime>
+        
+        <tag>DIY</tag>
+         
+        <tag>NAS</tag>
+         
+        <tag>Raspberry Pi</tag>
+         
+        <tag>树莓派</tag>
+         
+        <tag>远程下载</tag>
+         
+         
+           
+             
+              <breadCrumb title="Raspberry Pi" url="http://mkitby.com/categories/Raspberry-Pi/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://mkitby.com/2016/04/07/raspberry-pi-nas-remote-management/</loc>
+    <lastmod>2016-04-11T12:23:42.753Z</lastmod>
+    <data>
+        <display>
+        <title>Raspberry Pi从零开始搭建低成本NAS(9)-外网登录树莓派</title>
+        <pubTime>2016-04-07T15:25:50.000Z</pubTime>
+        
+        <tag>DIY</tag>
+         
+        <tag>NAS</tag>
+         
+        <tag>Raspberry Pi</tag>
+         
+        <tag>树莓派</tag>
+         
+        <tag>远程管理</tag>
+         
+         
+           
+             
+              <breadCrumb title="Raspberry Pi" url="http://mkitby.com/categories/Raspberry-Pi/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://mkitby.com/2015/11/05/raspberry-pi-nas-starting/</loc>
     <lastmod>2016-04-08T13:40:50.145Z</lastmod>
     <data>
@@ -58,68 +114,12 @@
 
     
   <url>
-    <loc>http://mkitby.com/2016/04/07/raspberry-pi-nas-remote-management/</loc>
-    <lastmod>2016-04-08T13:31:23.612Z</lastmod>
-    <data>
-        <display>
-        <title>Raspberry Pi从零开始搭建低成本NAS(9)-外网登录树莓派</title>
-        <pubTime>2016-04-07T15:25:50.000Z</pubTime>
-        
-        <tag>DIY</tag>
-         
-        <tag>NAS</tag>
-         
-        <tag>Raspberry Pi</tag>
-         
-        <tag>树莓派</tag>
-         
-        <tag>远程管理</tag>
-         
-         
-           
-             
-              <breadCrumb title="Raspberry Pi" url="http://mkitby.com/categories/Raspberry-Pi/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://mkitby.com/2016/04/06/raspberry-pi-nas-remote-download-xunlei/</loc>
     <lastmod>2016-04-08T13:31:13.166Z</lastmod>
     <data>
         <display>
         <title>Raspberry Pi从零开始搭建低成本NAS(8)-迅雷远程下载</title>
         <pubTime>2016-04-06T15:17:00.000Z</pubTime>
-        
-        <tag>DIY</tag>
-         
-        <tag>NAS</tag>
-         
-        <tag>Raspberry Pi</tag>
-         
-        <tag>树莓派</tag>
-         
-        <tag>远程下载</tag>
-         
-         
-           
-             
-              <breadCrumb title="Raspberry Pi" url="http://mkitby.com/categories/Raspberry-Pi/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download-aria2/</loc>
-    <lastmod>2016-04-08T13:29:59.312Z</lastmod>
-    <data>
-        <display>
-        <title>Raspberry Pi从零开始搭建低成本NAS(7)-Aria2远程下载</title>
-        <pubTime>2016-01-15T14:30:44.000Z</pubTime>
         
         <tag>DIY</tag>
          
