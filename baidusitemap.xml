@@ -4,6 +4,32 @@
 
     
   <url>
+    <loc>http://mkitby.com/2015/11/05/raspberry-pi-nas-starting/</loc>
+    <lastmod>2016-05-15T09:07:36.657Z</lastmod>
+    <data>
+        <display>
+        <title>Raspberry Pi从零开始搭建低成本NAS(1)-开篇</title>
+        <pubTime>2015-11-05T11:38:37.000Z</pubTime>
+        
+        <tag>DIY</tag>
+         
+        <tag>NAS</tag>
+         
+        <tag>Raspberry Pi</tag>
+         
+        <tag>树莓派</tag>
+         
+         
+           
+             
+              <breadCrumb title="Raspberry Pi" url="http://mkitby.com/categories/Raspberry-Pi/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://mkitby.com/2016/05/15/raspberry-pi-nas-manage-hdd-power/</loc>
     <lastmod>2016-05-15T08:29:49.470Z</lastmod>
     <data>
@@ -76,32 +102,6 @@
         <tag>树莓派</tag>
          
         <tag>远程管理</tag>
-         
-         
-           
-             
-              <breadCrumb title="Raspberry Pi" url="http://mkitby.com/categories/Raspberry-Pi/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://mkitby.com/2015/11/05/raspberry-pi-nas-starting/</loc>
-    <lastmod>2016-04-08T13:40:50.145Z</lastmod>
-    <data>
-        <display>
-        <title>Raspberry Pi从零开始搭建低成本NAS(1)-开篇</title>
-        <pubTime>2015-11-05T11:38:37.000Z</pubTime>
-        
-        <tag>DIY</tag>
-         
-        <tag>NAS</tag>
-         
-        <tag>Raspberry Pi</tag>
-         
-        <tag>树莓派</tag>
          
          
            
