@@ -4,6 +4,34 @@
 
     
   <url>
+    <loc>http://mkitby.com/2016/05/15/raspberry-pi-nas-manage-hdd-power/</loc>
+    <lastmod>2016-05-15T08:29:49.470Z</lastmod>
+    <data>
+        <display>
+        <title>Raspberry Pi从零开始搭建低成本NAS(11)-硬盘功耗管理</title>
+        <pubTime>2016-05-15T07:00:52.000Z</pubTime>
+        
+        <tag>DIY</tag>
+         
+        <tag>NAS</tag>
+         
+        <tag>Raspberry Pi</tag>
+         
+        <tag>树莓派</tag>
+         
+        <tag>硬盘低功耗</tag>
+         
+         
+           
+             
+              <breadCrumb title="Raspberry Pi" url="http://mkitby.com/categories/Raspberry-Pi/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download-aria2/</loc>
     <lastmod>2016-04-11T12:24:59.558Z</lastmod>
     <data>

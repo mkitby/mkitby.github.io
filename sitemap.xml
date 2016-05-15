@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://mkitby.com/2016/05/15/raspberry-pi-nas-manage-hdd-power/</loc>
+    <lastmod>2016-05-15T08:29:49.470Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download-aria2/</loc>
     <lastmod>2016-04-11T12:24:59.558Z</lastmod>
   </url>
