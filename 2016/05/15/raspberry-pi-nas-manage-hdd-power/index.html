@@ -1,8 +1,12 @@
 <!doctype html>
-<html class="theme-next ">
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
@@ -23,21 +27,51 @@
 
 
 
-  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
 
-  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
 
 
 
-<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="DIY,NAS,Raspberry Pi,树莓派,硬盘低功耗," />
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Raspberry Pi,树莓派,NAS,DIY,硬盘低功耗," />
 
 
 
@@ -48,7 +82,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -71,36 +105,51 @@
 
 
 
-<script type="text/javascript" id="hexo.configuration">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
   var CONFIG = {
+    root: '/',
     scheme: 'Mist',
-    sidebar: 'post',
-    motion: false
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
   };
 </script>
+
+
+
+  <link rel="canonical" href="http://mkitby.com/2016/05/15/raspberry-pi-nas-manage-hdd-power/"/>
+
+
+
+
 
   <title> Raspberry Pi从零开始搭建低成本NAS(11)-硬盘功耗管理 | mkitby's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-  <!--[if lte IE 8]>
-  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
-    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
-      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
-           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
-           style='margin-left:auto;margin-right:auto;display: block;'/>
-    </a>
-  </div>
-<![endif]-->
   
+
+
 
 
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
           m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
   ga('create', 'UA-69557502-1', 'auto');
   ga('send', 'pageview');
 </script>
@@ -110,7 +159,7 @@
     var _hmt = _hmt || [];
     (function() {
       var hm = document.createElement("script");
-      hm.src = "//hm.baidu.com/hm.js?774b09b66f1731e6b071844565c08311";
+      hm.src = "https://hm.baidu.com/hm.js?774b09b66f1731e6b071844565c08311";
       var s = document.getElementsByTagName("script")[0];
       s.parentNode.insertBefore(hm, s);
     })();
@@ -119,42 +168,57 @@
 
 
 
-  <div class="container one-column page-post-detail">
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-meta ">
-  
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
 
-  <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <span class="site-title">mkitby's Blog</span>
-      <span class="logo-line-after"><i></i></span>
-    </a>
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">mkitby's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
   </div>
-  <p class="site-subtitle"></p>
-</div>
 
-<div class="site-nav-toggle">
-  <button>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-  </button>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
 </div>
 
 <nav class="site-nav">
   
 
   
-    <ul id="menu" class="menu menu-left">
+    <ul id="menu" class="menu">
       
         
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -164,7 +228,7 @@
         <li class="menu-item menu-item-categories">
           <a href="/categories" rel="section">
             
-              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
             
             分类
           </a>
@@ -174,7 +238,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -184,7 +248,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -194,14 +258,34 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
         </li>
       
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
 
       
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
       
     </ul>
   
@@ -209,11 +293,9 @@
   
     <div class="site-search">
       
-  
   <form class="site-search-form">
-    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
-  </form>
-
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
 
 <script type="text/javascript">
   (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
@@ -230,18 +312,20 @@
   
 </nav>
 
+
+
  </div>
     </header>
 
     <main id="main" class="main">
       <div class="main-inner">
-        <div id="content" class="content">
-          
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
     
 
-  
   
 
   
@@ -249,6 +333,17 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://mkitby.com/2016/05/15/raspberry-pi-nas-manage-hdd-power/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mkitby">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://s.gravatar.com/avatar/b68532b396013f29eb7cf67138534fb4?s=80">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="mkitby's Blog">
+    </span>
 
     
       <header class="post-header">
@@ -267,17 +362,36 @@
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2016-05-15T15:00:52+08:00" content="2016-05-15">
-              2016-05-15
-            </time>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-15T15:00:52+08:00">
+                2016-05-15
+              </time>
+            
+
+            
+
+            
           </span>
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
               
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/Raspberry-Pi/" itemprop="url" rel="index">
                     <span itemprop="name">Raspberry Pi</span>
                   </a>
@@ -285,7 +399,6 @@
 
                 
                 
-
               
             </span>
           
@@ -293,12 +406,23 @@
           
             
               <span class="post-comments-count">
-                &nbsp; | &nbsp;
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
                 <a href="/2016/05/15/raspberry-pi-nas-manage-hdd-power/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/15/raspberry-pi-nas-manage-hdd-power/" itemprop="commentsCount"></span>
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2016/05/15/raspberry-pi-nas-manage-hdd-power/" itemprop="commentCount"></span>
                 </a>
               </span>
             
+          
+
+          
+          
+
+          
+
           
 
           
@@ -308,97 +432,118 @@
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
-        <span itemprop="articleBody"><p>为了延长硬盘使用寿命，当硬盘不使用时，需要让硬盘休眠，目前有一些软件可以自动做这事，像 hdparm, hd-idle 和 sdparm，具体用哪个取决于USB to SATA控制器和硬盘本身，其实说白了就是一个一个试，哪个有用就用哪个。当然，这里说的都是机械硬盘，固态硬盘没研究过。</p>
+        <p>为了延长硬盘使用寿命，当硬盘不使用时，需要让硬盘休眠，目前有一些软件可以自动做这事，像 hdparm, hd-idle 和 sdparm，具体用哪个取决于USB to SATA控制器和硬盘本身，其实说白了就是一个一个试，哪个有用就用哪个。当然，这里说的都是机械硬盘，固态硬盘没研究过。</p>
 <p>注意：不要让机械硬盘频繁地休眠唤醒，这样会给电机和轴承较大负荷，会加剧硬盘损耗. 一般制造商建议的最小休眠时间是 3-5 分钟。参考（<a href="http://hd-idle.sourceforge.net/）" target="_blank" rel="external">http://hd-idle.sourceforge.net/）</a></p>
 <a id="more"></a>
 <p>首先查看硬盘设备名，一般就是/dev/sda,dev/sdb之类的</p>
-<pre><code><span class="title">sudo</span> blkid
+<pre><code>sudo blkid
 </code></pre><p>例如输出</p>
-<pre><code><span class="regexp">/dev/</span><span class="string">mmcblk0p1:</span> SEC_TYPE=<span class="string">"msdos"</span> LABEL=<span class="string">"boot"</span> UUID=<span class="string">"15CD-3B79"</span> TYPE=<span class="string">"vfat"</span>
-<span class="regexp">/dev/</span><span class="string">mmcblk0p2:</span> UUID=<span class="string">"13d368bf-6dbf-4751-8ba1-88bed06bef77"</span> TYPE=<span class="string">"ext4"</span>
-<span class="regexp">/dev/</span><span class="string">sda1:</span> UUID=<span class="string">"7e623443-f19a-4564-8e60-e9d2170ac32a"</span> TYPE=<span class="string">"ext4"</span>
-<span class="regexp">/dev/</span><span class="string">sdb1:</span> LABEL=<span class="string">"COLORSPACE"</span> UUID=<span class="string">"F8E6-4FDB"</span> TYPE=<span class="string">"vfat"</span>
-<span class="regexp">/dev/</span><span class="string">sdb2:</span> UUID=<span class="string">"3007-F316"</span> TYPE=<span class="string">"exfat"</span>
+<pre><code>/dev/mmcblk0p1: SEC_TYPE=&quot;msdos&quot; LABEL=&quot;boot&quot; UUID=&quot;15CD-3B79&quot; TYPE=&quot;vfat&quot;
+/dev/mmcblk0p2: UUID=&quot;13d368bf-6dbf-4751-8ba1-88bed06bef77&quot; TYPE=&quot;ext4&quot;
+/dev/sda1: UUID=&quot;7e623443-f19a-4564-8e60-e9d2170ac32a&quot; TYPE=&quot;ext4&quot;
+/dev/sdb1: LABEL=&quot;COLORSPACE&quot; UUID=&quot;F8E6-4FDB&quot; TYPE=&quot;vfat&quot;
+/dev/sdb2: UUID=&quot;3007-F316&quot; TYPE=&quot;exfat&quot;
 </code></pre><p>硬盘设备名为/dev/sdb,硬盘有两个分区</p>
-<h1 id="安装和配置hdparm">安装和配置hdparm</h1><p>先测试hdparm是否支持。</p>
+<h1 id="安装和配置hdparm"><a href="#安装和配置hdparm" class="headerlink" title="安装和配置hdparm"></a>安装和配置hdparm</h1><p>先测试hdparm是否支持。</p>
 <p>安装 hdparm，</p>
-<pre><code>sudo apt-<span class="keyword">get</span> install hdparm -y
+<pre><code>sudo apt-get install hdparm -y
 </code></pre><p>确保你的硬盘支持hdparm,</p>
-<pre><code>sudo hdparm -y <span class="regexp">/dev/</span>sdb
+<pre><code>sudo hdparm -y /dev/sdb
 </code></pre><p>如果输出如下结果，就表明支持，</p>
-<pre><code><span class="regexp">/dev/</span><span class="string">sdb:</span>
+<pre><code>/dev/sdb:
  issuing standby command
 </code></pre><p>如果看到类似如下输出，就表明不支持，可以跳到 hd-idle 或者 sdparm，</p>
 <pre><code>/dev/sda:
  issuing standby command
-SG_IO: bad/missing sense data, sb[]:  <span class="number">70</span> <span class="number">00</span> <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">0</span>a <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">20</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>
+SG_IO: bad/missing sense data, sb[]:  70 00 05 00 00 00 00 0a 00 00 00 00 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 </code></pre><p>检查硬盘是否支持写缓存功能，</p>
-<pre><code>sudo hdparm -I <span class="regexp">/dev/</span>sdb | <span class="keyword">grep</span> <span class="string">'Write cache'</span>
+<pre><code>sudo hdparm -I /dev/sdb | grep &apos;Write cache&apos;
 </code></pre><p>如果看到 * (星号)，表示支持，</p>
-<pre><code><span class="bullet">*    </span>Write cache
+<pre><code>*    Write cache
 </code></pre><p>如果没有看到 * (星号)，表示不支持，</p>
-<pre><code><span class="operator">Write</span> cache
+<pre><code>Write cache
 </code></pre><p>编辑配置文件，</p>
-<pre><code>sudo <span class="keyword">vim</span> /etc/hdparm.<span class="keyword">conf</span>
+<pre><code>sudo vim /etc/hdparm.conf
 </code></pre><p>spindown_time值乘以 5 得到总的时间（单位秒）. 例如想配置成空闲10分钟就休眠，spindown_time = 10 * 60 / 5 = 120</p>
 <p>在文件结尾加入，</p>
 <pre><code>/dev/sdb {
-write_cache = <span class="function_start"><span class="keyword">on</span></span>
-spindown_time = <span class="number">120</span>
+write_cache = on
+spindown_time = 120
 }
 </code></pre><p>如果不支持写缓存，去掉 write_cache = on。</p>
 <p>重启 hdparm 服务，</p>
-<pre><code><span class="title">sudo</span> service hdparm restart
+<pre><code>sudo service hdparm restart
 </code></pre><p>更多hdparm配置可以参考这(<a href="http://www.linux-magazine.com/Online/Features/Tune-Your-Hard-Disk-with-hdparm" target="_blank" rel="external">http://www.linux-magazine.com/Online/Features/Tune-Your-Hard-Disk-with-hdparm</a>)</p>
-<h1 id="安装和配置_hd-idle">安装和配置 hd-idle</h1><p>如果你的硬盘不支持 hdparm，或者就想试下hd-idle, 可以删除hdparm</p>
-<pre><code>sudo apt-<span class="built_in">get</span> <span class="built_in">remove</span> hdparm -<span class="keyword">y</span>
+<h1 id="安装和配置-hd-idle"><a href="#安装和配置-hd-idle" class="headerlink" title="安装和配置 hd-idle"></a>安装和配置 hd-idle</h1><p>如果你的硬盘不支持 hdparm，或者就想试下hd-idle, 可以删除hdparm</p>
+<pre><code>sudo apt-get remove hdparm -y
 </code></pre><p>hd-idle 使用一个特殊的系统文件来检测磁盘活动, 如果没有这个文件，那么就不能使用hd-idle。输入</p>
-<pre><code>cat /<span class="keyword">proc</span>/diskstats
+<pre><code>cat /proc/diskstats
 </code></pre><p>应该会看到如下的输出, 如果提示找不到文件或目录，那就不支持hd-idle。</p>
 <p>   8      16 sdb 5604 130363 146538 16780 1814 51838 429152 763380 0 18230 780150<br>   8      17 sdb1 5075 130363 139418 15370 8 0 8 10 0 8680 15370<br>   8      18 sdb2 512 0 6984 1290 1805 51838 429144 763360 0 9770 764650</p>
 <p>hd-idle的自己编译，</p>
-<pre><code><span class="label">sudo</span> apt-<span class="preprocessor">get</span> install <span class="keyword">build-essential </span>fakeroot debhelper -y
+<pre><code>sudo apt-get install build-essential fakeroot debhelper -y
 </code></pre><p>获取源代码，</p>
-<pre><code>wget <span class="symbol">http:</span>/<span class="regexp">/sourceforge.net/projects</span><span class="regexp">/hd-idle/files</span><span class="regexp">/hd-idle-1.05.tgz</span>
+<pre><code>wget http://sourceforge.net/projects/hd-idle/files/hd-idle-1.05.tgz
 </code></pre><p>解压缩进入目录</p>
-<pre><code><span class="tag">tar</span> <span class="tag">-xvf</span> <span class="tag">hd-idle-1</span><span class="class">.05</span><span class="class">.tgz</span> &amp;&amp; <span class="tag">cd</span> <span class="tag">hd-idle</span>
+<pre><code>tar -xvf hd-idle-1.05.tgz &amp;&amp; cd hd-idle
 </code></pre><p>编译安装，</p>
 <pre><code>dpkg-buildpackage -rfakeroot
-sudo dpkg -<span class="tag">i</span> ../hd-idle_*.deb
+sudo dpkg -i ../hd-idle_*.deb
 </code></pre><p>继续检查硬盘是否支持hd-idle,</p>
-<pre><code>sudo hd-idle -<span class="tag">i</span> <span class="number">0</span> -<span class="tag">a</span> sda -<span class="tag">i</span> <span class="number">300</span> -d
+<pre><code>sudo hd-idle -i 0 -a sda -i 300 -d
 </code></pre><p>You should see output like this</p>
 <p>probing sda: reads: 13418, writes: 594344<br>probing sdb: reads: 146538, writes: 429152</p>
 <p>按 Ctrl+C 停止 hd-idle</p>
 <p>编辑配置文件，</p>
-<pre><code>sudo vim <span class="regexp">/etc/</span><span class="keyword">default</span><span class="regexp">/hd-idle</span>
+<pre><code>sudo vim /etc/default/hd-idle
 </code></pre><p>修改下面来开启hd-idle</p>
-<pre><code><span class="setting">START_HD_IDLE=<span class="value"><span class="keyword">true</span></span></span>
+<pre><code>START_HD_IDLE=true
 </code></pre><p>调整空闲时间为10分钟 (60 秒 * 10)</p>
-<pre><code><span class="setting">HD_IDLE_OPTS=<span class="value"><span class="string">"-i 0 -a sda -i 600"</span></span></span>
+<pre><code>HD_IDLE_OPTS=&quot;-i 0 -a sda -i 600&quot;
 </code></pre><p>重启服务，</p>
-<pre><code><span class="title">sudo</span> service hd-idle restart
+<pre><code>sudo service hd-idle restart
 </code></pre><p>如果hd-idle也不支持，可以试下 sdparm</p>
-<h1 id="安装和配置_sdparm">安装和配置 sdparm</h1><p>首先删除 hdparm 和 hd-idle</p>
-<pre><code>sudo apt-<span class="built_in">get</span> <span class="built_in">remove</span> hdparm -<span class="keyword">y</span>
-sudo dpkg -<span class="keyword">r</span> hd-idle
+<h1 id="安装和配置-sdparm"><a href="#安装和配置-sdparm" class="headerlink" title="安装和配置 sdparm"></a>安装和配置 sdparm</h1><p>首先删除 hdparm 和 hd-idle</p>
+<pre><code>sudo apt-get remove hdparm -y
+sudo dpkg -r hd-idle
 </code></pre><p>安装 sdparm</p>
-<pre><code>sudo apt-<span class="keyword">get</span> install sdparm -y
+<pre><code>sudo apt-get install sdparm -y
 </code></pre><p>测试sdparm是否支持，停止一切硬盘操作，输入</p>
-<pre><code><span class="comment">sydo</span> <span class="comment">sdparm</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">flexible</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">command=stop</span> <span class="comment">/dev/sdb</span>
+<pre><code>sydo sdparm --flexible --command=stop /dev/sdb
 </code></pre><p>应该可以看到如下输出，</p>
-<pre><code><span class="regexp">/dev/</span><span class="string">sdb:</span> SANHO     IUSBPORT          <span class="number">0</span>
+<pre><code>/dev/sdb: SANHO     IUSBPORT          0
 </code></pre><p>如果需要每隔10分钟休眠硬盘，可以用如下crontab命令</p>
-<pre><code>sudo crontab <span class="operator">-l</span> | { cat; <span class="built_in">echo</span> <span class="string">"/10 * * * * sdparm --command=stop /dev/sda"</span>; } | sudo crontab -
+<pre><code>sudo crontab -l | { cat; echo &quot;/10 * * * * sdparm --command=stop /dev/sda&quot;; } | sudo crontab -
 </code></pre><p>经过以上折腾，终于可以放心了，不用担心硬盘一天24小时不要命的转。</p>
-<h1 id="参考">参考</h1><p><a href="http://sg.danny.cz/sg/sdparm.html" target="_blank" rel="external">http://sg.danny.cz/sg/sdparm.html</a><br><a href="http://www.nslu2-linux.org/wiki/FAQ/SpinDownUSBHarddisks" target="_blank" rel="external">http://www.nslu2-linux.org/wiki/FAQ/SpinDownUSBHarddisks</a><br><a href="http://hd-idle.sourceforge.net/" target="_blank" rel="external">http://hd-idle.sourceforge.net/</a></p>
-</span>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://sg.danny.cz/sg/sdparm.html" target="_blank" rel="external">http://sg.danny.cz/sg/sdparm.html</a><br><a href="http://www.nslu2-linux.org/wiki/FAQ/SpinDownUSBHarddisks" target="_blank" rel="external">http://www.nslu2-linux.org/wiki/FAQ/SpinDownUSBHarddisks</a><br><a href="http://hd-idle.sourceforge.net/" target="_blank" rel="external">http://hd-idle.sourceforge.net/</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
       
     </div>
 
@@ -406,17 +551,21 @@ sudo dpkg -<span class="keyword">r</span> hd-idle
       
         <div class="post-tags">
           
-            <a href="/tags/DIY/" rel="tag">#DIY</a>
+            <a href="/tags/Raspberry-Pi/" rel="tag"># Raspberry Pi</a>
           
-            <a href="/tags/NAS/" rel="tag">#NAS</a>
+            <a href="/tags/树莓派/" rel="tag"># 树莓派</a>
           
-            <a href="/tags/Raspberry-Pi/" rel="tag">#Raspberry Pi</a>
+            <a href="/tags/NAS/" rel="tag"># NAS</a>
           
-            <a href="/tags/树莓派/" rel="tag">#树莓派</a>
+            <a href="/tags/DIY/" rel="tag"># DIY</a>
           
-            <a href="/tags/硬盘低功耗/" rel="tag">#硬盘低功耗</a>
+            <a href="/tags/硬盘低功耗/" rel="tag"># 硬盘低功耗</a>
           
         </div>
+      
+
+      
+        
       
 
       
@@ -428,6 +577,8 @@ sudo dpkg -<span class="keyword">r</span> hd-idle
               </a>
             
           </div>
+
+          <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
@@ -444,52 +595,36 @@ sudo dpkg -<span class="keyword">r</span> hd-idle
 
     <div class="post-spread">
       
-        <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style">
-  <a class="jiathis_button_tsina"></a>
-  <a class="jiathis_button_tqq"></a>
-  <a class="jiathis_button_weixin"></a>
-  <a class="jiathis_button_cqq"></a>
-  <a class="jiathis_button_douban"></a>
-  <a class="jiathis_button_renren"></a>
-  <a class="jiathis_button_qzone"></a>
-  <a class="jiathis_button_kaixin001"></a>
-  <a class="jiathis_button_copy"></a>
-  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
-  <a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" >
-  var jiathis_config={
-    hideMore:false
-  }
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
 </script>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
-<!-- JiaThis Button END -->
 
       
     </div>
   </div>
 
 
-        </div>
+          </div>
+          
 
-        
 
-
-        
+          
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/05/15/raspberry-pi-nas-manage-hdd-power/"
-           data-title="Raspberry Pi从零开始搭建低成本NAS(11)-硬盘功耗管理" data-url="http://mkitby.com/2016/05/15/raspberry-pi-nas-manage-hdd-power/" data-author-key="1">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
       </div>
     
   </div>
 
 
-      </div>
-
-      
+        </div>
         
+          
   
   <div class="sidebar-toggle">
     <div class="sidebar-toggle-line-wrap">
@@ -515,33 +650,48 @@ sudo dpkg -<span class="keyword">r</span> hd-idle
         </ul>
       
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" src="https://s.gravatar.com/avatar/b68532b396013f29eb7cf67138534fb4?s=80" alt="mkitby" itemprop="image"/>
+          <img class="site-author-image" itemprop="image"
+               src="https://s.gravatar.com/avatar/b68532b396013f29eb7cf67138534fb4?s=80"
+               alt="mkitby" />
           <p class="site-author-name" itemprop="name">mkitby</p>
+           
+              <p class="site-description motion-element" itemprop="description">Just notes</p>
+          
         </div>
-        <p class="site-description motion-element" itemprop="description">Just notes</p>
         <nav class="site-state motion-element">
-          <div class="site-state-item site-state-posts">
-            <a href="/archives">
-              <span class="site-state-item-count">11</span>
-              <span class="site-state-item-name">日志</span>
-            </a>
-          </div>
 
-          <div class="site-state-item site-state-categories">
-            <a href="/categories">
-              <span class="site-state-item-count">1</span>
-              <span class="site-state-item-name">分类</span>
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">日志</span>
               </a>
-          </div>
+            </div>
+          
 
-          <div class="site-state-item site-state-tags">
-            <a href="/tags">
-              <span class="site-state-item-count">10</span>
-              <span class="site-state-item-name">标签</span>
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
               </a>
-          </div>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
 
         </nav>
 
@@ -558,18 +708,20 @@ sudo dpkg -<span class="keyword">r</span> hd-idle
           
             
               <span class="links-of-author-item">
-                <a href="https://github.com/tkggitfk24" target="_blank">
+                <a href="https://github.com/tkggitfk24" target="_blank" title="github">
                   
-                    <i class="fa fa-globe"></i> github
+                    <i class="fa fa-fw fa-globe"></i>
                   
+                  github
                 </a>
               </span>
             
               <span class="links-of-author-item">
-                <a href="http://www.zhihu.com/people/tkggitfk24" target="_blank">
+                <a href="http://www.zhihu.com/people/tkggitfk24" target="_blank" title="zhihu">
                   
-                    <i class="fa fa-globe"></i> zhihu
+                    <i class="fa fa-fw fa-globe"></i>
                   
+                  zhihu
                 </a>
               </span>
             
@@ -579,36 +731,40 @@ sudo dpkg -<span class="keyword">r</span> hd-idle
         
         
 
-        <div class="links-of-author motion-element">
-          
-        </div>
+        
+        
+
+        
+
 
       </section>
 
       
+      <!--noindex-->
         <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc-indicator-top post-toc-indicator">
-            <i class="fa fa-angle-double-up"></i>
-          </div>
           <div class="post-toc">
+
             
               
             
+
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装和配置hdparm"><span class="nav-number">1.</span> <span class="nav-text">安装和配置hdparm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装和配置_hd-idle"><span class="nav-number">2.</span> <span class="nav-text">安装和配置 hd-idle</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装和配置_sdparm"><span class="nav-number">3.</span> <span class="nav-text">安装和配置 sdparm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装和配置hdparm"><span class="nav-number">1.</span> <span class="nav-text">安装和配置hdparm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装和配置-hd-idle"><span class="nav-number">2.</span> <span class="nav-text">安装和配置 hd-idle</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装和配置-sdparm"><span class="nav-number">3.</span> <span class="nav-text">安装和配置 sdparm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
-          </div>
-          <div class="post-toc-indicator-bottom post-toc-indicator">
-            <i class="fa fa-angle-double-down"></i>
+
           </div>
         </section>
+      <!--/noindex-->
+      
+
       
 
     </div>
   </aside>
 
 
-      
+        
+      </div>
     </main>
 
     <footer id="footer" class="footer">
@@ -616,15 +772,16 @@ sudo dpkg -<span class="keyword">r</span> hd-idle
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
-    <i class="icon-next-heart fa fa-heart"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">mkitby</span>
 </div>
 
+
 <div class="powered-by">
-  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
 </div>
 
 <div class="theme-info">
@@ -635,228 +792,153 @@ sudo dpkg -<span class="keyword">r</span> hd-idle
 </div>
 
 
+        
 
+        
       </div>
     </footer>
 
-    <div class="back-to-top"></div>
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
   </div>
 
-  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
-
-  
   
 
-  
-    
-
-  
-    
-  
-
-  <script type="text/javascript">
-    var duoshuoQuery = {short_name:"mkitby"};
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';ds.async = true;
-      ds.id = 'duoshuo-script';
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0]
-      || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
-    
-     
-
-
-    
-  
-
-  
-  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
-  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
-
-
-  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
-  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
-<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
-
-<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
-
-
-  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  
-<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
-
-
-<script type="text/javascript" id="sidebar.toc.highlight">
-  $(document).ready(function () {
-    var tocSelector = '.post-toc';
-    var $tocSelector = $(tocSelector);
-    var activeCurrentSelector = '.active-current';
-
-    $tocSelector
-      .on('activate.bs.scrollspy', function () {
-        var $currentActiveElement = $(tocSelector + ' .active').last();
-
-        removeCurrentActiveClass();
-        $currentActiveElement.addClass('active-current');
-
-        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
-      })
-      .on('clear.bs.scrollspy', function () {
-        removeCurrentActiveClass();
-      });
-
-    function removeCurrentActiveClass () {
-      $(tocSelector + ' ' + activeCurrentSelector)
-        .removeClass(activeCurrentSelector.substring(1));
-    }
-
-    function processTOC () {
-      getTOCMaxHeight();
-      toggleTOCOverflowIndicators();
-    }
-
-    function getTOCMaxHeight () {
-      var height = $('.sidebar').height() -
-                   $tocSelector.position().top -
-                   $('.post-toc-indicator-bottom').height();
-
-      $tocSelector.css('height', height);
-
-      return height;
-    }
-
-    function toggleTOCOverflowIndicators () {
-      tocOverflowIndicator(
-        '.post-toc-indicator-top',
-        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
-      );
-
-      tocOverflowIndicator(
-        '.post-toc-indicator-bottom',
-        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
-      )
-    }
-
-    $(document).on('sidebar.motion.complete', function () {
-      processTOC();
-    });
-
-    $('body').scrollspy({ target: tocSelector });
-    $(window).on('resize', function () {
-      if ( $('.sidebar').hasClass('sidebar-active') ) {
-        processTOC();
-      }
-    });
-
-    onScroll($tocSelector);
-
-    function onScroll (element) {
-      element.on('mousewheel DOMMouseScroll', function (event) {
-          var oe = event.originalEvent;
-          var delta = oe.wheelDelta || -oe.detail;
-
-          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
-          event.preventDefault();
-
-          toggleTOCOverflowIndicators();
-      });
-    }
-
-    function tocOverflowIndicator (indicator, action) {
-      var $indicator = $(indicator);
-      var opacity = action === 'show' ? 1 : 0;
-      $indicator.velocity ?
-        $indicator.velocity('stop').velocity({
-          opacity: opacity
-        }, { duration: 100 }) :
-        $indicator.stop().animate({
-          opacity: opacity
-        }, 100);
-    }
-
-  });
-</script>
-
-<script type="text/javascript" id="sidebar.nav">
-  $(document).ready(function () {
-    var html = $('html');
-    var TAB_ANIMATE_DURATION = 200;
-    var hasVelocity = $.isFunction(html.velocity);
-
-    $('.sidebar-nav li').on('click', function () {
-      var item = $(this);
-      var activeTabClassName = 'sidebar-nav-active';
-      var activePanelClassName = 'sidebar-panel-active';
-      if (item.hasClass(activeTabClassName)) {
-        return;
-      }
-
-      var currentTarget = $('.' + activePanelClassName);
-      var target = $('.' + item.data('target'));
-
-      hasVelocity ?
-        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
-          target
-            .velocity('stop')
-            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
-            .addClass(activePanelClassName);
-        }) :
-        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
-          currentTarget.hide();
-          target
-            .stop()
-            .css({'opacity': 0, 'display': 'block'})
-            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
-              currentTarget.removeClass(activePanelClassName);
-              target.addClass(activePanelClassName);
-            });
-        });
-
-      item.siblings().removeClass(activeTabClassName);
-      item.addClass(activeTabClassName);
-    });
-
-    $('.post-toc a').on('click', function (e) {
-      e.preventDefault();
-      var targetSelector = escapeSelector(this.getAttribute('href'));
-      var offset = $(targetSelector).offset().top;
-      hasVelocity ?
-        html.velocity('stop').velocity('scroll', {
-          offset: offset  + 'px',
-          mobileHA: false
-        }) :
-        $('html, body').stop().animate({
-          scrollTop: offset
-        }, 500);
-    });
-
-    // Expand sidebar on post detail page by default, when post has a toc.
-    motionMiddleWares.sidebar = function () {
-      var $tocContent = $('.post-toc-content');
-      if (CONFIG.sidebar === 'post') {
-        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
-          displaySidebar();
-        }
-      }
-    };
-  });
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
 </script>
 
 
 
-  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
 
   
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://mkitby.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://mkitby.com/2016/05/15/raspberry-pi-nas-manage-hdd-power/';
+          this.page.identifier = '2016/05/15/raspberry-pi-nas-manage-hdd-power/';
+          this.page.title = 'Raspberry Pi从零开始搭建低成本NAS(11)-硬盘功耗管理';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://mkitby.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
   
 
 </body>

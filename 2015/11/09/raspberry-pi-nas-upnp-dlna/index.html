@@ -1,8 +1,12 @@
 <!doctype html>
-<html class="theme-next ">
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 
@@ -23,21 +27,51 @@
 
 
 
-  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
 
-  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
 
 
 
-<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="DIY,NAS,Raspberry Pi,树莓派," />
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Raspberry Pi,树莓派,NAS,DIY," />
 
 
 
@@ -48,7 +82,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -72,39 +106,55 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Raspberry Pi从零开始搭建低成本NAS(5)-UPNP/DLNA多媒体">
 <meta name="twitter:description" content="说到RPi上的DNLA，就不得不说下MiniDLNA，网上资料教程最多的就是它了，我自己用的也是它。后面我会介绍用plex来搭建流媒体服务，它的功能更加强大，支持在线转码，缺点就是其专用客户端需要收费，树莓派跑起来比较占资源。其实有很多软件可以用来搭建流媒体服务，下面两个网站有关于这方面的详细信息，有兴趣可以参考，">
+<meta name="twitter:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure1.jpg_mkitby">
 
 
 
-<script type="text/javascript" id="hexo.configuration">
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
   var CONFIG = {
+    root: '/',
     scheme: 'Mist',
-    sidebar: 'post',
-    motion: false
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
   };
 </script>
+
+
+
+  <link rel="canonical" href="http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/"/>
+
+
+
+
 
   <title> Raspberry Pi从零开始搭建低成本NAS(5)-UPNP/DLNA多媒体 | mkitby's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-  <!--[if lte IE 8]>
-  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
-    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
-      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
-           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
-           style='margin-left:auto;margin-right:auto;display: block;'/>
-    </a>
-  </div>
-<![endif]-->
   
+
+
 
 
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
           m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
   ga('create', 'UA-69557502-1', 'auto');
   ga('send', 'pageview');
 </script>
@@ -114,7 +164,7 @@
     var _hmt = _hmt || [];
     (function() {
       var hm = document.createElement("script");
-      hm.src = "//hm.baidu.com/hm.js?774b09b66f1731e6b071844565c08311";
+      hm.src = "https://hm.baidu.com/hm.js?774b09b66f1731e6b071844565c08311";
       var s = document.getElementsByTagName("script")[0];
       s.parentNode.insertBefore(hm, s);
     })();
@@ -123,42 +173,57 @@
 
 
 
-  <div class="container one-column page-post-detail">
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-meta ">
-  
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
 
-  <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <span class="site-title">mkitby's Blog</span>
-      <span class="logo-line-after"><i></i></span>
-    </a>
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">mkitby's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
   </div>
-  <p class="site-subtitle"></p>
-</div>
 
-<div class="site-nav-toggle">
-  <button>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-  </button>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
 </div>
 
 <nav class="site-nav">
   
 
   
-    <ul id="menu" class="menu menu-left">
+    <ul id="menu" class="menu">
       
         
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -168,7 +233,7 @@
         <li class="menu-item menu-item-categories">
           <a href="/categories" rel="section">
             
-              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
             
             分类
           </a>
@@ -178,7 +243,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -188,7 +253,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -198,14 +263,34 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
         </li>
       
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
 
       
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
       
     </ul>
   
@@ -213,11 +298,9 @@
   
     <div class="site-search">
       
-  
   <form class="site-search-form">
-    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
-  </form>
-
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
 
 <script type="text/javascript">
   (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
@@ -234,18 +317,20 @@
   
 </nav>
 
+
+
  </div>
     </header>
 
     <main id="main" class="main">
       <div class="main-inner">
-        <div id="content" class="content">
-          
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
     
 
-  
   
 
   
@@ -253,6 +338,17 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mkitby">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://s.gravatar.com/avatar/b68532b396013f29eb7cf67138534fb4?s=80">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="mkitby's Blog">
+    </span>
 
     
       <header class="post-header">
@@ -271,17 +367,36 @@
 
         <div class="post-meta">
           <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2015-11-09T20:46:36+08:00" content="2015-11-09">
-              2015-11-09
-            </time>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-11-09T20:46:36+08:00">
+                2015-11-09
+              </time>
+            
+
+            
+
+            
           </span>
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
               
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/Raspberry-Pi/" itemprop="url" rel="index">
                     <span itemprop="name">Raspberry Pi</span>
                   </a>
@@ -289,7 +404,6 @@
 
                 
                 
-
               
             </span>
           
@@ -297,12 +411,23 @@
           
             
               <span class="post-comments-count">
-                &nbsp; | &nbsp;
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
                 <a href="/2015/11/09/raspberry-pi-nas-upnp-dlna/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/09/raspberry-pi-nas-upnp-dlna/" itemprop="commentsCount"></span>
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2015/11/09/raspberry-pi-nas-upnp-dlna/" itemprop="commentCount"></span>
                 </a>
               </span>
             
+          
+
+          
+          
+
+          
+
           
 
           
@@ -312,131 +437,152 @@
     
 
 
-    <div class="post-body">
+    <div class="post-body" itemprop="articleBody">
 
       
       
 
       
-        <span itemprop="articleBody"><p>说到RPi上的DNLA，就不得不说下MiniDLNA，网上资料教程最多的就是它了，我自己用的也是它。后面我会介绍用plex来搭建流媒体服务，它的功能更加强大，支持在线转码，缺点就是其专用客户端需要收费，树莓派跑起来比较占资源。其实有很多软件可以用来搭建流媒体服务，下面两个网站有关于这方面的详细信息，有兴趣可以参考，</p>
+        <p>说到RPi上的DNLA，就不得不说下MiniDLNA，网上资料教程最多的就是它了，我自己用的也是它。后面我会介绍用plex来搭建流媒体服务，它的功能更加强大，支持在线转码，缺点就是其专用客户端需要收费，树莓派跑起来比较占资源。其实有很多软件可以用来搭建流媒体服务，下面两个网站有关于这方面的详细信息，有兴趣可以参考，</p>
 <a id="more"></a>
 <p><a href="https://en.wikipedia.org/wiki/Comparison_of_UPnP_AV_media_servers/" target="_blank" rel="external">https://en.wikipedia.org/wiki/Comparison_of_UPnP_AV_media_servers/</a><br><a href="https://en.wikipedia.org/wiki/List_of_UPnP_AV_media_servers_and_clients/" target="_blank" rel="external">https://en.wikipedia.org/wiki/List_of_UPnP_AV_media_servers_and_clients/</a></p>
-<h1 id="miniDLNA">miniDLNA</h1><h2 id="安装miniDLNA">安装miniDLNA</h2><p>如果采用<code>sudo apt-get install miniDLNA</code>，可能安装的不是最新版本，并且miniDLNA默认是不支持rmvb格式的视频，所以我们最好自己下载源代码，只需要做很少改动就可以支持rmvb，然后编译安装。<br>如果已经安装Raspbian仓库的miniDLNA，需要先移除</p>
-<pre><code>sudo apt-<span class="built_in">get</span> purge minidlna -<span class="keyword">y</span>
-sudo apt-<span class="built_in">get</span> <span class="built_in">remove</span> minidlna
-sudo apt-<span class="built_in">get</span> autoremove -<span class="keyword">y</span>
+<h1 id="miniDLNA"><a href="#miniDLNA" class="headerlink" title="miniDLNA"></a>miniDLNA</h1><h2 id="安装miniDLNA"><a href="#安装miniDLNA" class="headerlink" title="安装miniDLNA"></a>安装miniDLNA</h2><p>如果采用<code>sudo apt-get install miniDLNA</code>，可能安装的不是最新版本，并且miniDLNA默认是不支持rmvb格式的视频，所以我们最好自己下载源代码，只需要做很少改动就可以支持rmvb，然后编译安装。<br>如果已经安装Raspbian仓库的miniDLNA，需要先移除</p>
+<pre><code>sudo apt-get purge minidlna -y
+sudo apt-get remove minidlna
+sudo apt-get autoremove -y
 </code></pre><p>然后安装miniDLNA所依赖的包</p>
-<pre><code><span class="label">sudo</span> apt-<span class="preprocessor">get</span> <span class="keyword">build-dep </span>minidlna -y
+<pre><code>sudo apt-get build-dep minidlna -y
 </code></pre><p>如果提示出错，可以手动安装</p>
-<pre><code>sudo apt-<span class="built_in">get</span> install libjpeg-<span class="built_in">dev</span> libsqlite3-<span class="built_in">dev</span> libexif-<span class="built_in">dev</span> libid3tag0-<span class="built_in">dev</span> libvorbis-<span class="built_in">dev</span> libflac-<span class="built_in">dev</span> libavformat-<span class="built_in">dev</span> libavcodec-<span class="built_in">dev</span> –y
+<pre><code>sudo apt-get install libjpeg-dev libsqlite3-dev libexif-dev libid3tag0-dev libvorbis-dev libflac-dev libavformat-dev libavcodec-dev –y
 </code></pre><p>安装编译相关工具</p>
-<pre><code>sudo apt-get <span class="operator"><span class="keyword">install</span> autoconf automake autopoint <span class="keyword">build</span>-essential</span>
+<pre><code>sudo apt-get install autoconf automake autopoint build-essential
 </code></pre><p>下载miniDLNA源代码,目前最新的是1.1.5版</p>
-<pre><code>wget http:<span class="comment">//sourceforge.net/projects/minidlna/files/minidlna/1.1.5/minidlna-1.1.5.tar.gz</span>
-tar -xvf minidlna-<span class="number">1.1</span><span class="number">.5</span>.tar.gz
-cd minidlna-<span class="number">1.1</span><span class="number">.5</span>
+<pre><code>wget http://sourceforge.net/projects/minidlna/files/minidlna/1.1.5/minidlna-1.1.5.tar.gz
+tar -xvf minidlna-1.1.5.tar.gz
+cd minidlna-1.1.5
 </code></pre><p>修改源代码支持rmvb/rm</p>
-<pre><code><span class="preprocessor">## metadata.c</span>
-<span class="comment">//line 840</span>
-<span class="keyword">else</span> <span class="keyword">if</span>( <span class="built_in">strncmp</span>(ctx-&gt;iformatctx-&gt;name, <span class="string">"matroska"</span>, <span class="number">8</span>) == <span class="number">0</span> )
-    xasprintf(&amp;m.mime, <span class="string">"video/x-matroska"</span>);
-<span class="keyword">else</span> <span class="keyword">if</span>( <span class="built_in">strcmp</span>(ctx-&gt;iformatctx-&gt;name, <span class="string">"flv"</span>) == <span class="number">0</span> )
-    xasprintf(&amp;m.mime, <span class="string">"video/x-flv"</span>);
-<span class="comment">//----add----</span>
-<span class="keyword">else</span> <span class="keyword">if</span>( <span class="built_in">strcmp</span>(ctx-&gt;iformat-&gt;name, <span class="string">"rm"</span>) == <span class="number">0</span> )
-    xasprintf(&amp;m.mime, <span class="string">"video/x-pn-realvideo"</span>);
-<span class="keyword">else</span> <span class="keyword">if</span>( <span class="built_in">strcmp</span>(ctx-&gt;iformat-&gt;name, <span class="string">"rmvb"</span>) == <span class="number">0</span> )
-    xasprintf(&amp;m.mime, <span class="string">"video/x-pn-realvideo"</span>);
-<span class="comment">//---end----</span>
-<span class="keyword">if</span>( m.mime )
-    <span class="keyword">goto</span> video_nodlna;
+<pre><code>## metadata.c
+//line 840
+else if( strncmp(ctx-&gt;iformatctx-&gt;name, &quot;matroska&quot;, 8) == 0 )
+    xasprintf(&amp;m.mime, &quot;video/x-matroska&quot;);
+else if( strcmp(ctx-&gt;iformatctx-&gt;name, &quot;flv&quot;) == 0 )
+    xasprintf(&amp;m.mime, &quot;video/x-flv&quot;);
+//----add----
+else if( strcmp(ctx-&gt;iformat-&gt;name, &quot;rm&quot;) == 0 )
+    xasprintf(&amp;m.mime, &quot;video/x-pn-realvideo&quot;);
+else if( strcmp(ctx-&gt;iformat-&gt;name, &quot;rmvb&quot;) == 0 )
+    xasprintf(&amp;m.mime, &quot;video/x-pn-realvideo&quot;);
+//---end----
+if( m.mime )
+    goto video_nodlna;
 
-<span class="preprocessor">## upnpglobalvars.h</span>
-<span class="comment">// Line 169</span>
-    <span class="string">"http-get:*:audio/mp4:*,"</span> \
-    <span class="string">"http-get:*:audio/x-wav:*,"</span> \
-    <span class="string">"http-get:*:audio/x-flac:*,"</span> \
-    <span class="string">"http-get:*:application/ogg:*,"</span> \
-    <span class="string">"http-get:*:video/x-pn-realvideo:*"</span> <span class="comment">// Add this</span>
+## upnpglobalvars.h
+// Line 169
+    &quot;http-get:*:audio/mp4:*,&quot; \
+    &quot;http-get:*:audio/x-wav:*,&quot; \
+    &quot;http-get:*:audio/x-flac:*,&quot; \
+    &quot;http-get:*:application/ogg:*,&quot; \
+    &quot;http-get:*:video/x-pn-realvideo:*&quot; // Add this
 
-<span class="preprocessor">#<span class="keyword">define</span> DLNA_FLAG_DLNA_V1_5      <span class="number">0x00100000</span></span>
-<span class="preprocessor">#<span class="keyword">define</span> DLNA_FLAG_HTTP_STALLING  <span class="number">0x00200000</span></span>
+#define DLNA_FLAG_DLNA_V1_5      0x00100000
+#define DLNA_FLAG_HTTP_STALLING  0x00200000
 
 
-<span class="preprocessor">## utils.c</span>
-<span class="comment">//line 381</span>
-        ends_with(file, <span class="string">".m2t"</span>) || ends_with(file, <span class="string">".mkv"</span>)   ||
-        ends_with(file, <span class="string">".vob"</span>) || ends_with(file, <span class="string">".ts"</span>)    ||
-        ends_with(file, <span class="string">".flv"</span>) || ends_with(file, <span class="string">".xvid"</span>)  ||
-<span class="comment">//----add----</span>
-        ends_with(file, <span class="string">".rm"</span>)  || ends_with(file, <span class="string">".rmvb"</span>)  ||
-<span class="comment">//----end----</span>
-<span class="preprocessor">#<span class="keyword">ifdef</span> TIVO_SUPPORT</span>
-        ends_with(file, <span class="string">".TiVo"</span>) ||
-<span class="preprocessor">#<span class="keyword">endif</span></span>
-        ends_with(file, <span class="string">".mov"</span>) || ends_with(file, <span class="string">".3gp"</span>));
+## utils.c
+//line 381
+        ends_with(file, &quot;.m2t&quot;) || ends_with(file, &quot;.mkv&quot;)   ||
+        ends_with(file, &quot;.vob&quot;) || ends_with(file, &quot;.ts&quot;)    ||
+        ends_with(file, &quot;.flv&quot;) || ends_with(file, &quot;.xvid&quot;)  ||
+//----add----
+        ends_with(file, &quot;.rm&quot;)  || ends_with(file, &quot;.rmvb&quot;)  ||
+//----end----
+#ifdef TIVO_SUPPORT
+        ends_with(file, &quot;.TiVo&quot;) ||
+#endif
+        ends_with(file, &quot;.mov&quot;) || ends_with(file, &quot;.3gp&quot;));
 </code></pre><p>配置，编译和安装miniDLNA，大概需要5分钟完成</p>
-<pre><code>./configure &amp;&amp; <span class="built_in">make</span> &amp;&amp; sudo <span class="built_in">make</span> install
+<pre><code>./configure &amp;&amp; make &amp;&amp; sudo make install
 </code></pre><p>复制默认配置文件</p>
-<pre><code>sudo cp minidlna<span class="class">.conf</span> /etc/
+<pre><code>sudo cp minidlna.conf /etc/
 </code></pre><p>复制启动脚本，来自动启动miniDLNA.</p>
-<pre><code>sudo cp linux/minidlna<span class="class">.init</span><span class="class">.d</span><span class="class">.script</span> /etc/init.d/minidlna
+<pre><code>sudo cp linux/minidlna.init.d.script /etc/init.d/minidlna
 </code></pre><p>为启动脚本添加执行权限</p>
-<pre><code>sudo chmod +x <span class="regexp">/etc/i</span>nit.d<span class="regexp">/minidlna</span>
+<pre><code>sudo chmod +x /etc/init.d/minidlna
 </code></pre><p>然后更新rc，添加自启动服务</p>
-<pre><code>sudo <span class="operator"><span class="keyword">update</span>-rc.<span class="keyword">d</span> minidlna <span class="keyword">defaults</span></span>
+<pre><code>sudo update-rc.d minidlna defaults
 </code></pre><p>先备份然后编辑配置文件</p>
-<pre><code>sudo cp /etc/minidlna<span class="class">.conf</span> /etc/minidlna<span class="class">.conf</span><span class="class">.orig</span>
+<pre><code>sudo cp /etc/minidlna.conf /etc/minidlna.conf.orig
 sudo vim /etc/minidlna.conf
 </code></pre><p>修改如下设置</p>
-<pre><code>media_dir=<span class="regexp">/home/pi</span><span class="regexp">/nas-data/</span><span class="constant">DLNA</span>
-media_dir=<span class="regexp">/home/pi</span><span class="regexp">/usbhdd/usbhdd</span>1
-media_dir=<span class="regexp">/home/pi</span><span class="regexp">/usbhdd/usbhdd</span>2
+<pre><code>media_dir=/home/pi/nas-data/DLNA
+media_dir=/home/pi/usbhdd/usbhdd1
+media_dir=/home/pi/usbhdd/usbhdd2
 
-db_dir=<span class="regexp">/home/pi</span><span class="regexp">/nas-data/</span><span class="constant">DLNA</span>/db
-log_dir=<span class="regexp">/home/pi</span><span class="regexp">/nas-data/</span><span class="constant">DLNA</span>/log
+db_dir=/home/pi/nas-data/DLNA/db
+log_dir=/home/pi/nas-data/DLNA/log
 
-friendly_name=<span class="constant">RasPi</span> <span class="constant">DLNA</span> <span class="constant">Server</span>
+friendly_name=RasPi DLNA Server
 </code></pre><p>创建文件夹</p>
-<pre><code><span class="title">mkdir</span> /home/pi/nas-<span class="typedef"><span class="keyword">data</span>/<span class="type">DLNA</span></span>
-<span class="title">mkdir</span> /home/pi/nas-<span class="typedef"><span class="keyword">data</span>/<span class="type">DLNA</span>/<span class="container">{<span class="type">Music</span>,<span class="type">Pictures</span>,<span class="type">Videos</span>,<span class="title">db</span>,<span class="title">log</span>}</span></span>
+<pre><code>mkdir /home/pi/nas-data/DLNA
+mkdir /home/pi/nas-data/DLNA/{Music,Pictures,Videos,db,log}
 </code></pre><p>最后重启miniDLNA服务</p>
-<pre><code><span class="title">sudo</span> service minidlna restart
+<pre><code>sudo service minidlna restart
 </code></pre><p>打开计算机网络，可以看到RasPi DLNA Server媒体设备，如图Figure 1所示。同时如果是使用Windows 10（win7没有，win8没测试过），在我的电脑-&gt;网络位置还会显示RasPi DLNA Server，如图Figure 2所示,这一点配合WMP比较有用，正好弥补了WMP的不足，后面会有详细介绍。</p>
 <div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure1.jpg_mkitby" alt=""><br>Figure 1. 树莓派DLNA<br></div>
 
 <div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure2.jpg_mkitby" alt=""><br>Figure 2. 网络位置DLNA Server<br></div>
 
-<h2 id="MP3中文名称乱码">MP3中文名称乱码</h2><p>用Windows Media Player(后面用WMP替代)查看minidlna多媒体服务器文件，有些中文文件名显示乱码，有些就正常。目前Linux中流行的很多播放器经常不能正确显示如歌曲名、专辑名等MP3 tag信息，经过有些工具转换后，标签又不能被Windows识别。MP3的歌曲名、艺术家、专辑名等信息都以一定的编码格式存储在MP3标签中。简单地说，乱码出现的原因就是播放器未能准确识别出MP3标签的中文编码格式。</p>
+<h2 id="MP3中文名称乱码"><a href="#MP3中文名称乱码" class="headerlink" title="MP3中文名称乱码"></a>MP3中文名称乱码</h2><p>用Windows Media Player(后面用WMP替代)查看minidlna多媒体服务器文件，有些中文文件名显示乱码，有些就正常。目前Linux中流行的很多播放器经常不能正确显示如歌曲名、专辑名等MP3 tag信息，经过有些工具转换后，标签又不能被Windows识别。MP3的歌曲名、艺术家、专辑名等信息都以一定的编码格式存储在MP3标签中。简单地说，乱码出现的原因就是播放器未能准确识别出MP3标签的中文编码格式。</p>
 <p>具体的说，现在MP3文件的标签主要有几种标准：ID3v1、ID3v2（现在常见的又分为2.3和2.4）、APEv2。可以从两个角度解决这个问题。一是转换已有MP3文件的标签编码，二是使用支持GBK编码的播放软件,这种方案我没试过。</p>
 <p>mp3tagiconv是一款可用于解决MP3乱码问题的软件。它可以自动探测MP3标签的编码，并以合理的方式重新写入，经过其处理的编码可被Linux、Windows（包括Windows Media Player）和各种移动设备正确识别。<br>mp3tagiconv 需要 mutagen 的支持，确保之前已经安装。</p>
-<pre><code><span class="comment"># The script depends on mutagen to run. Please install it from the repository of your distribution (in Ubuntu: python-mutagen).</span>
+<pre><code># The script depends on mutagen to run. Please install it from the repository of your distribution (in Ubuntu: python-mutagen).
 sudo apt-get install python-mutagen
-git <span class="keyword">clone</span> <span class="title">https</span>://github.com/cxcxcxcx/mp3tagiconv.git
+git clone https://github.com/cxcxcxcx/mp3tagiconv.git
 </code></pre><blockquote>
 <p>Usage：<br>For mp3 files with Chinese tags(we first try gbk, then utf8), ID3v2 tags which are already encoded in unicode will not be affected:<br>mp3tagiconv a.mp3<br>You can use -e to specify the encoding used if the tag is stored by latin-1. The program will guess your encoding according to your list:<br>mp3tagiconv -e gbk,utf8 b.mp3<br>If you don’t want to confirm for every file(not recommended):<br>mp3tagiconv –do-update *.mp3</p>
 </blockquote>
-<h1 id="Plex_Media_Server">Plex Media Server</h1><p>下载plex media server deb安装包</p>
-<pre><code>sudo wget <span class="string">https:</span><span class="comment">//dev2day.de/plex-latest</span>
+<h1 id="Plex-Media-Server"><a href="#Plex-Media-Server" class="headerlink" title="Plex Media Server"></a>Plex Media Server</h1><p>下载plex media server deb安装包</p>
+<pre><code>sudo wget https://dev2day.de/plex-latest
 </code></pre><p>等待下载完成。</p>
 <p>安装deb包</p>
-<pre><code>sudo dpkg -<span class="tag">i</span> plex*
+<pre><code>sudo dpkg -i plex*
 </code></pre><p>安装转码(transcoding)所需要的软件</p>
-<pre><code>sudo apt-<span class="keyword">get</span> install mkvtoolnix libexpat1 ffmpeg -y
+<pre><code>sudo apt-get install mkvtoolnix libexpat1 ffmpeg -y
 </code></pre><p>等待安装完成。</p>
 <p>重启plex media server服务</p>
-<pre><code><span class="title">sudo</span> service plexmediaserver restart
+<pre><code>sudo service plexmediaserver restart
 </code></pre><p>访问Plex Media Server WebGUI, 用浏览器访问<a href="http://192.168.1.118:32400/web" target="_blank" rel="external">http://192.168.1.118:32400/web</a>， 192.168.1.118为RPi的IP地址<br>大概会弹出一个对话框，在页面右上角（如图Figure 3）点agree，之后进入主页，</p>
 <div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure3.jpg_mkitby" alt=""><br>Figure 3. 主页右上角部分<br></div><br>然后点击页面右上角的扳手图标进入设置页面，如图Figure 4，点击右上角Web，然后在最左边选择General，先设置语言为中文，点最下面的SAVE CHANGES按钮，然后刷新，界面会马上切换为中文。<br><div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure4.jpg_mkitby" alt=""><br>Figure 4. 设置页面<br></div><br>这里面有很多设置选项，我也不一一讲，下面只列出我认为比较重要的设置，<br>1.    播放器设置，如图Figure 5，在这里面可以设置流媒体质量、分辨率、音量和字幕等，可以根据实际需要做修改，另外右上角可以打开高级选项，我暂时没有做任何改动，全部默认。<br><div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure5.jpg_mkitby" alt=""><br>Figure 5. 播放器设置界面<br></div><br>2.    服务器—&gt;资料库，勾选“自动更新我的资料库”和“定期更新我的媒体库”，如图Figure 6所示。<br><div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure6.jpg_mkitby" alt=""><br>Figure 6. 资料库设置<br></div><br>3. 最后讲如何添加多媒体资料，在主页左上角点击+号，或弹出如图Figure 7所示界面，然后就可以尽情添加你想要的资料了。<br><div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure7.jpg_mkitby" alt=""><br>Figure 7. 添加资料库<br></div>
 
-<h1 id="DLNA_client选择">DLNA client选择</h1><p>下面主要列出Windows，Android，IOS平台，我测试过的，其他平台linux，mac留给你们测了。</p>
-<h2 id="跨平台Kodi(XMBC)">跨平台Kodi(XMBC)</h2><p>Kodi就是大名鼎鼎的XBMC，一款功能强大的重量级播放器，支持Windows, Linux, Mac OS, IOS, Android全平台。但是我认为这家伙最适合在大屏幕的播放设备，支持遥控器，作为家庭影院终端播放器比较多。手机，电脑我个人感觉操作不是很方便，必须要全屏。</p>
-<h2 id="Windows平台">Windows平台</h2><p>Windows平台推荐用VLC或者WMP，VLC可以比较好地支持miniDLNA，有个问题就是默认设置播放视频时，中文名字的视频在VLC中显示小方块也就是乱码，字幕也是，需要需改设置，打开VLC后点击“工具”-&gt;“首选项”-&gt;“字幕和OSD”-&gt;“字体”右侧下拉菜单选择“MingLiU”保存后重启播放器即可。测试发现Windows 7系统下还可以选择以下字体：PMingLiU, DFKai-SB, Microsoft JhengHei, MingLiU_HKSCS。Windows XP系统下还可以选择以下字体：PMingLiU, 宋体, 黑体, 新宋体。</p>
+<h1 id="DLNA-client选择"><a href="#DLNA-client选择" class="headerlink" title="DLNA client选择"></a>DLNA client选择</h1><p>下面主要列出Windows，Android，IOS平台，我测试过的，其他平台linux，mac留给你们测了。</p>
+<h2 id="跨平台Kodi-XMBC"><a href="#跨平台Kodi-XMBC" class="headerlink" title="跨平台Kodi(XMBC)"></a>跨平台Kodi(XMBC)</h2><p>Kodi就是大名鼎鼎的XBMC，一款功能强大的重量级播放器，支持Windows, Linux, Mac OS, IOS, Android全平台。但是我认为这家伙最适合在大屏幕的播放设备，支持遥控器，作为家庭影院终端播放器比较多。手机，电脑我个人感觉操作不是很方便，必须要全屏。</p>
+<h2 id="Windows平台"><a href="#Windows平台" class="headerlink" title="Windows平台"></a>Windows平台</h2><p>Windows平台推荐用VLC或者WMP，VLC可以比较好地支持miniDLNA，有个问题就是默认设置播放视频时，中文名字的视频在VLC中显示小方块也就是乱码，字幕也是，需要需改设置，打开VLC后点击“工具”-&gt;“首选项”-&gt;“字幕和OSD”-&gt;“字体”右侧下拉菜单选择“MingLiU”保存后重启播放器即可。测试发现Windows 7系统下还可以选择以下字体：PMingLiU, DFKai-SB, Microsoft JhengHei, MingLiU_HKSCS。Windows XP系统下还可以选择以下字体：PMingLiU, 宋体, 黑体, 新宋体。</p>
 <p>WMP也可以支持miniDLNA，但是不能显示文件夹，所有内容都只能显示在一起，这点比较可惜，另外WMP支持格式有限，需要安装外部解码包，推荐K-Lite Codec Pack。在windows 10上，在网络位置会显示DLNA服务器，打开之后，选择需要播放的文件，右键-&gt;打开方式-&gt;Windows Media Player，然后就可以直接播放了，如果选择其他播放器打开会显示下载进度条，目前发现只有WMP支持直接播放。如果谁发现其他播放器，请告诉我。</p>
-<h2 id="Android平台">Android平台</h2><p>Android平台有很多选择， BubbleUPNP, MediaHouse等。BubbleUPNP功能强大，支持作为DLNA server，mediahouse功能专一，专门用作client，但是他们都需要外挂播放器。外挂播放器推荐VLC for android或者MX Player，其中MX Player有些视频会出现声音画面不同步的现象，这点很可惜，不知道后面版本会不会解决，但VLC目前测试下来还没有发现这个问题。所以在Android上面，我主要使用VLC作为外挂播放器。</p>
-<h2 id="IOS平台">IOS平台</h2><p>IOS平台不像Android平台那样，有那么多免费的软件可以选择，目前免费的好像就是 Moli Player，收费的有AV Player, GoodPlayer, AcePlayer等。</p>
-<h1 id="参考">参考</h1><p><a href="http://skypegnu1.blog.51cto.com/8991766/1654186" target="_blank" rel="external">http://skypegnu1.blog.51cto.com/8991766/1654186</a><br><a href="http://www.htpcguides.com/install-readymedia-minidlna-1-1-4-raspberry-pi/" target="_blank" rel="external">http://www.htpcguides.com/install-readymedia-minidlna-1-1-4-raspberry-pi/</a><br><a href="http://linux-wiki.cn/wiki/Mp3标签乱码问题分析与解决方案" target="_blank" rel="external">http://linux-wiki.cn/wiki/Mp3标签乱码问题分析与解决方案</a></p>
-</span>
+<h2 id="Android平台"><a href="#Android平台" class="headerlink" title="Android平台"></a>Android平台</h2><p>Android平台有很多选择， BubbleUPNP, MediaHouse等。BubbleUPNP功能强大，支持作为DLNA server，mediahouse功能专一，专门用作client，但是他们都需要外挂播放器。外挂播放器推荐VLC for android或者MX Player，其中MX Player有些视频会出现声音画面不同步的现象，这点很可惜，不知道后面版本会不会解决，但VLC目前测试下来还没有发现这个问题。所以在Android上面，我主要使用VLC作为外挂播放器。</p>
+<h2 id="IOS平台"><a href="#IOS平台" class="headerlink" title="IOS平台"></a>IOS平台</h2><p>IOS平台不像Android平台那样，有那么多免费的软件可以选择，目前免费的好像就是 Moli Player，收费的有AV Player, GoodPlayer, AcePlayer等。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://skypegnu1.blog.51cto.com/8991766/1654186" target="_blank" rel="external">http://skypegnu1.blog.51cto.com/8991766/1654186</a><br><a href="http://www.htpcguides.com/install-readymedia-minidlna-1-1-4-raspberry-pi/" target="_blank" rel="external">http://www.htpcguides.com/install-readymedia-minidlna-1-1-4-raspberry-pi/</a><br><a href="http://linux-wiki.cn/wiki/Mp3标签乱码问题分析与解决方案" target="_blank" rel="external">http://linux-wiki.cn/wiki/Mp3标签乱码问题分析与解决方案</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
       
     </div>
 
@@ -444,15 +590,19 @@ git <span class="keyword">clone</span> <span class="title">https</span>://github
       
         <div class="post-tags">
           
-            <a href="/tags/DIY/" rel="tag">#DIY</a>
+            <a href="/tags/Raspberry-Pi/" rel="tag"># Raspberry Pi</a>
           
-            <a href="/tags/NAS/" rel="tag">#NAS</a>
+            <a href="/tags/树莓派/" rel="tag"># 树莓派</a>
           
-            <a href="/tags/Raspberry-Pi/" rel="tag">#Raspberry Pi</a>
+            <a href="/tags/NAS/" rel="tag"># NAS</a>
           
-            <a href="/tags/树莓派/" rel="tag">#树莓派</a>
+            <a href="/tags/DIY/" rel="tag"># DIY</a>
           
         </div>
+      
+
+      
+        
       
 
       
@@ -464,6 +614,8 @@ git <span class="keyword">clone</span> <span class="title">https</span>://github
               </a>
             
           </div>
+
+          <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
@@ -484,52 +636,36 @@ git <span class="keyword">clone</span> <span class="title">https</span>://github
 
     <div class="post-spread">
       
-        <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style">
-  <a class="jiathis_button_tsina"></a>
-  <a class="jiathis_button_tqq"></a>
-  <a class="jiathis_button_weixin"></a>
-  <a class="jiathis_button_cqq"></a>
-  <a class="jiathis_button_douban"></a>
-  <a class="jiathis_button_renren"></a>
-  <a class="jiathis_button_qzone"></a>
-  <a class="jiathis_button_kaixin001"></a>
-  <a class="jiathis_button_copy"></a>
-  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
-  <a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" >
-  var jiathis_config={
-    hideMore:false
-  }
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
 </script>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
-<!-- JiaThis Button END -->
 
       
     </div>
   </div>
 
 
-        </div>
+          </div>
+          
 
-        
 
-
-        
+          
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/11/09/raspberry-pi-nas-upnp-dlna/"
-           data-title="Raspberry Pi从零开始搭建低成本NAS(5)-UPNP/DLNA多媒体" data-url="http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/" data-author-key="1">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
       </div>
     
   </div>
 
 
-      </div>
-
-      
+        </div>
         
+          
   
   <div class="sidebar-toggle">
     <div class="sidebar-toggle-line-wrap">
@@ -555,33 +691,48 @@ git <span class="keyword">clone</span> <span class="title">https</span>://github
         </ul>
       
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" src="https://s.gravatar.com/avatar/b68532b396013f29eb7cf67138534fb4?s=80" alt="mkitby" itemprop="image"/>
+          <img class="site-author-image" itemprop="image"
+               src="https://s.gravatar.com/avatar/b68532b396013f29eb7cf67138534fb4?s=80"
+               alt="mkitby" />
           <p class="site-author-name" itemprop="name">mkitby</p>
+           
+              <p class="site-description motion-element" itemprop="description">Just notes</p>
+          
         </div>
-        <p class="site-description motion-element" itemprop="description">Just notes</p>
         <nav class="site-state motion-element">
-          <div class="site-state-item site-state-posts">
-            <a href="/archives">
-              <span class="site-state-item-count">11</span>
-              <span class="site-state-item-name">日志</span>
-            </a>
-          </div>
 
-          <div class="site-state-item site-state-categories">
-            <a href="/categories">
-              <span class="site-state-item-count">1</span>
-              <span class="site-state-item-name">分类</span>
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">日志</span>
               </a>
-          </div>
+            </div>
+          
 
-          <div class="site-state-item site-state-tags">
-            <a href="/tags">
-              <span class="site-state-item-count">10</span>
-              <span class="site-state-item-name">标签</span>
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
               </a>
-          </div>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
 
         </nav>
 
@@ -598,18 +749,20 @@ git <span class="keyword">clone</span> <span class="title">https</span>://github
           
             
               <span class="links-of-author-item">
-                <a href="https://github.com/tkggitfk24" target="_blank">
+                <a href="https://github.com/tkggitfk24" target="_blank" title="github">
                   
-                    <i class="fa fa-globe"></i> github
+                    <i class="fa fa-fw fa-globe"></i>
                   
+                  github
                 </a>
               </span>
             
               <span class="links-of-author-item">
-                <a href="http://www.zhihu.com/people/tkggitfk24" target="_blank">
+                <a href="http://www.zhihu.com/people/tkggitfk24" target="_blank" title="zhihu">
                   
-                    <i class="fa fa-globe"></i> zhihu
+                    <i class="fa fa-fw fa-globe"></i>
                   
+                  zhihu
                 </a>
               </span>
             
@@ -619,36 +772,40 @@ git <span class="keyword">clone</span> <span class="title">https</span>://github
         
         
 
-        <div class="links-of-author motion-element">
-          
-        </div>
+        
+        
+
+        
+
 
       </section>
 
       
+      <!--noindex-->
         <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc-indicator-top post-toc-indicator">
-            <i class="fa fa-angle-double-up"></i>
-          </div>
           <div class="post-toc">
+
             
               
             
+
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#miniDLNA"><span class="nav-number">1.</span> <span class="nav-text">miniDLNA</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装miniDLNA"><span class="nav-number">1.1.</span> <span class="nav-text">安装miniDLNA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MP3中文名称乱码"><span class="nav-number">1.2.</span> <span class="nav-text">MP3中文名称乱码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Plex_Media_Server"><span class="nav-number">2.</span> <span class="nav-text">Plex Media Server</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DLNA_client选择"><span class="nav-number">3.</span> <span class="nav-text">DLNA client选择</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#跨平台Kodi(XMBC)"><span class="nav-number">3.1.</span> <span class="nav-text">跨平台Kodi(XMBC)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Windows平台"><span class="nav-number">3.2.</span> <span class="nav-text">Windows平台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android平台"><span class="nav-number">3.3.</span> <span class="nav-text">Android平台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IOS平台"><span class="nav-number">3.4.</span> <span class="nav-text">IOS平台</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#miniDLNA"><span class="nav-number">1.</span> <span class="nav-text">miniDLNA</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装miniDLNA"><span class="nav-number">1.1.</span> <span class="nav-text">安装miniDLNA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MP3中文名称乱码"><span class="nav-number">1.2.</span> <span class="nav-text">MP3中文名称乱码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Plex-Media-Server"><span class="nav-number">2.</span> <span class="nav-text">Plex Media Server</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DLNA-client选择"><span class="nav-number">3.</span> <span class="nav-text">DLNA client选择</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#跨平台Kodi-XMBC"><span class="nav-number">3.1.</span> <span class="nav-text">跨平台Kodi(XMBC)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Windows平台"><span class="nav-number">3.2.</span> <span class="nav-text">Windows平台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android平台"><span class="nav-number">3.3.</span> <span class="nav-text">Android平台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IOS平台"><span class="nav-number">3.4.</span> <span class="nav-text">IOS平台</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
-          </div>
-          <div class="post-toc-indicator-bottom post-toc-indicator">
-            <i class="fa fa-angle-double-down"></i>
+
           </div>
         </section>
+      <!--/noindex-->
+      
+
       
 
     </div>
   </aside>
 
 
-      
+        
+      </div>
     </main>
 
     <footer id="footer" class="footer">
@@ -656,15 +813,16 @@ git <span class="keyword">clone</span> <span class="title">https</span>://github
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
-    <i class="icon-next-heart fa fa-heart"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">mkitby</span>
 </div>
 
+
 <div class="powered-by">
-  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
 </div>
 
 <div class="theme-info">
@@ -675,228 +833,153 @@ git <span class="keyword">clone</span> <span class="title">https</span>://github
 </div>
 
 
+        
 
+        
       </div>
     </footer>
 
-    <div class="back-to-top"></div>
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
   </div>
 
-  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
-
-  
   
 
-  
-    
-
-  
-    
-  
-
-  <script type="text/javascript">
-    var duoshuoQuery = {short_name:"mkitby"};
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';ds.async = true;
-      ds.id = 'duoshuo-script';
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0]
-      || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
-    
-     
-
-
-    
-  
-
-  
-  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
-  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
-
-
-  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
-  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
-<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
-
-<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
-
-
-  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  
-<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
-
-
-<script type="text/javascript" id="sidebar.toc.highlight">
-  $(document).ready(function () {
-    var tocSelector = '.post-toc';
-    var $tocSelector = $(tocSelector);
-    var activeCurrentSelector = '.active-current';
-
-    $tocSelector
-      .on('activate.bs.scrollspy', function () {
-        var $currentActiveElement = $(tocSelector + ' .active').last();
-
-        removeCurrentActiveClass();
-        $currentActiveElement.addClass('active-current');
-
-        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
-      })
-      .on('clear.bs.scrollspy', function () {
-        removeCurrentActiveClass();
-      });
-
-    function removeCurrentActiveClass () {
-      $(tocSelector + ' ' + activeCurrentSelector)
-        .removeClass(activeCurrentSelector.substring(1));
-    }
-
-    function processTOC () {
-      getTOCMaxHeight();
-      toggleTOCOverflowIndicators();
-    }
-
-    function getTOCMaxHeight () {
-      var height = $('.sidebar').height() -
-                   $tocSelector.position().top -
-                   $('.post-toc-indicator-bottom').height();
-
-      $tocSelector.css('height', height);
-
-      return height;
-    }
-
-    function toggleTOCOverflowIndicators () {
-      tocOverflowIndicator(
-        '.post-toc-indicator-top',
-        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
-      );
-
-      tocOverflowIndicator(
-        '.post-toc-indicator-bottom',
-        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
-      )
-    }
-
-    $(document).on('sidebar.motion.complete', function () {
-      processTOC();
-    });
-
-    $('body').scrollspy({ target: tocSelector });
-    $(window).on('resize', function () {
-      if ( $('.sidebar').hasClass('sidebar-active') ) {
-        processTOC();
-      }
-    });
-
-    onScroll($tocSelector);
-
-    function onScroll (element) {
-      element.on('mousewheel DOMMouseScroll', function (event) {
-          var oe = event.originalEvent;
-          var delta = oe.wheelDelta || -oe.detail;
-
-          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
-          event.preventDefault();
-
-          toggleTOCOverflowIndicators();
-      });
-    }
-
-    function tocOverflowIndicator (indicator, action) {
-      var $indicator = $(indicator);
-      var opacity = action === 'show' ? 1 : 0;
-      $indicator.velocity ?
-        $indicator.velocity('stop').velocity({
-          opacity: opacity
-        }, { duration: 100 }) :
-        $indicator.stop().animate({
-          opacity: opacity
-        }, 100);
-    }
-
-  });
-</script>
-
-<script type="text/javascript" id="sidebar.nav">
-  $(document).ready(function () {
-    var html = $('html');
-    var TAB_ANIMATE_DURATION = 200;
-    var hasVelocity = $.isFunction(html.velocity);
-
-    $('.sidebar-nav li').on('click', function () {
-      var item = $(this);
-      var activeTabClassName = 'sidebar-nav-active';
-      var activePanelClassName = 'sidebar-panel-active';
-      if (item.hasClass(activeTabClassName)) {
-        return;
-      }
-
-      var currentTarget = $('.' + activePanelClassName);
-      var target = $('.' + item.data('target'));
-
-      hasVelocity ?
-        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
-          target
-            .velocity('stop')
-            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
-            .addClass(activePanelClassName);
-        }) :
-        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
-          currentTarget.hide();
-          target
-            .stop()
-            .css({'opacity': 0, 'display': 'block'})
-            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
-              currentTarget.removeClass(activePanelClassName);
-              target.addClass(activePanelClassName);
-            });
-        });
-
-      item.siblings().removeClass(activeTabClassName);
-      item.addClass(activeTabClassName);
-    });
-
-    $('.post-toc a').on('click', function (e) {
-      e.preventDefault();
-      var targetSelector = escapeSelector(this.getAttribute('href'));
-      var offset = $(targetSelector).offset().top;
-      hasVelocity ?
-        html.velocity('stop').velocity('scroll', {
-          offset: offset  + 'px',
-          mobileHA: false
-        }) :
-        $('html, body').stop().animate({
-          scrollTop: offset
-        }, 500);
-    });
-
-    // Expand sidebar on post detail page by default, when post has a toc.
-    motionMiddleWares.sidebar = function () {
-      var $tocContent = $('.post-toc-content');
-      if (CONFIG.sidebar === 'post') {
-        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
-          displaySidebar();
-        }
-      }
-    };
-  });
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
 </script>
 
 
 
-  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
 
   
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://mkitby.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/';
+          this.page.identifier = '2015/11/09/raspberry-pi-nas-upnp-dlna/';
+          this.page.title = 'Raspberry Pi从零开始搭建低成本NAS(5)-UPNP/DLNA多媒体';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://mkitby.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
   
 
 </body>
