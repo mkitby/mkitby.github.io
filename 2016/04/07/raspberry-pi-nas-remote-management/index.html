@@ -105,8 +105,8 @@
 基于Web的SSH
 
 在详细介绍这两种方案之前，我们需要先解决一个问题，如何获取树莓派外网（公网）IP地址？我们的树莓派一般处于路由器后面，外网不可见。">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-management/figure1.jpg_mkitby">
-<meta property="og:updated_time" content="2016-04-11T12:23:42.753Z">
+<meta property="og:image" content="http://mkitby.com/2016/04/07/raspberry-pi-nas-remote-management/figure1.jpg">
+<meta property="og:updated_time" content="2019-03-17T06:18:54.544Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Raspberry Pi从零开始搭建低成本NAS(9)-外网登录树莓派">
 <meta name="twitter:description" content="有时候我们可能需要在外网环境下控制家里面的树莓派，根据实际网络情况，提供下面两个方案供选择。
@@ -115,7 +115,7 @@
 基于Web的SSH
 
 在详细介绍这两种方案之前，我们需要先解决一个问题，如何获取树莓派外网（公网）IP地址？我们的树莓派一般处于路由器后面，外网不可见。">
-<meta name="twitter:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-management/figure1.jpg_mkitby">
+<meta name="twitter:image" content="http://mkitby.com/2016/04/07/raspberry-pi-nas-remote-management/figure1.jpg">
 
 
 
@@ -477,7 +477,7 @@
 </code></pre><p>在 exit 0 之前， 加入以下代码：<br>su root -c “python /home/pi/external_ip.py”</p>
 <p>简单介绍一下上面的脚的功能，树莓派开机自动获取公网IP地址并发送到指定邮箱，然后每分钟监测IP是否发生变化，如果变了，则发送变化之后的IP到指定邮箱。需要修改的地方如下：<br>mailto_list里面填想要收到IP的邮箱，可以填多个，发送邮箱我列出了三个邮箱，126，hotmail，gmail（可能被墙，不建议使用），根据自己情况选择一个，如果想用其他邮箱，请自行修改。关于getip()函数，我列了两个，目前在我这两个都能用，请根据自己实际情况选择。</p>
 <h2 id="动态域名"><a href="#动态域名" class="headerlink" title="动态域名"></a>动态域名</h2><p>如果路由器支持动态域名（DNS）功能，可以选择这种方法，注册一个动态域名服务，比如花生壳等，然后在路由器里面设置动态DNS，如下图所示。</p>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-management/figure1.jpg_mkitby" alt=""><br></div>
+<div align="center"><br><img src="/2016/04/07/raspberry-pi-nas-remote-management/figure1.jpg" alt=""><br></div>
 
 <h1 id="外网远程登录树莓派SSH"><a href="#外网远程登录树莓派SSH" class="headerlink" title="外网远程登录树莓派SSH"></a>外网远程登录树莓派SSH</h1><p>这种方法我想大家应该不陌生了，前面我们操作树莓派，都是通过登录SSH，只不过是内网登录。外网登录其实没什么区别，就是需要在路由器上做端口映射。<br>如果你所在网络对外只开放了80和8080等web端口，那么这种方法就不怎么好使了，需要修改SSH端口号为80端口，还有更糟糕的情况，恰好你的网络供应商封锁了80和8080等web端口(<a href="http://www.canyouseeme.org/可以查询)，就像我一样，握个抓，目前我所知道的简单有效的方法是用手机来登录SSH，Android平台推荐使用JuiceSSH，有虚拟键键盘，可以很方便输入Tab" target="_blank" rel="external">http://www.canyouseeme.org/可以查询)，就像我一样，握个抓，目前我所知道的简单有效的方法是用手机来登录SSH，Android平台推荐使用JuiceSSH，有虚拟键键盘，可以很方便输入Tab</a>, Ctrl等特殊按键，音量键放大缩小字体，可旋转成横屏，甩ConnectBot几条街，IOS平台可以使用Serverauditor。另外可以通过搭建代理转发服务来实现登录如果还有其他好方法，也欢迎分享。</p>
 <h1 id="基于Web的SSH"><a href="#基于Web的SSH" class="headerlink" title="基于Web的SSH"></a>基于Web的SSH</h1><p>如果幸运，web端口没有被封，那么可以采用基于web的SSH，在任何有网络的地方，只需要浏览器就就可以搞定一切。基于web的SSH软件有很多，我也不一一介绍了，感兴趣的可以自己参考 ，下面我以shellinabox为例介绍，<br>先安装，</p>
@@ -777,7 +777,7 @@ SHELLINABOX_ARGS=&quot;--no-beep&quot;
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

@@ -95,18 +95,18 @@
 <meta property="og:url" content="http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/index.html">
 <meta property="og:site_name" content="mkitby's Blog">
 <meta property="og:description" content="说到RPi上的DNLA，就不得不说下MiniDLNA，网上资料教程最多的就是它了，我自己用的也是它。后面我会介绍用plex来搭建流媒体服务，它的功能更加强大，支持在线转码，缺点就是其专用客户端需要收费，树莓派跑起来比较占资源。其实有很多软件可以用来搭建流媒体服务，下面两个网站有关于这方面的详细信息，有兴趣可以参考，">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure1.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure2.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure3.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure4.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure5.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure6.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure7.jpg_mkitby">
-<meta property="og:updated_time" content="2015-12-09T12:56:55.616Z">
+<meta property="og:image" content="http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/figure1.jpg">
+<meta property="og:image" content="http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/figure2.jpg">
+<meta property="og:image" content="http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/figure3.jpg">
+<meta property="og:image" content="http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/figure4.jpg">
+<meta property="og:image" content="http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/figure5.jpg">
+<meta property="og:image" content="http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/figure6.jpg">
+<meta property="og:image" content="http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/figure7.jpg">
+<meta property="og:updated_time" content="2019-03-17T06:18:05.498Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Raspberry Pi从零开始搭建低成本NAS(5)-UPNP/DLNA多媒体">
 <meta name="twitter:description" content="说到RPi上的DNLA，就不得不说下MiniDLNA，网上资料教程最多的就是它了，我自己用的也是它。后面我会介绍用plex来搭建流媒体服务，它的功能更加强大，支持在线转码，缺点就是其专用客户端需要收费，树莓派跑起来比较占资源。其实有很多软件可以用来搭建流媒体服务，下面两个网站有关于这方面的详细信息，有兴趣可以参考，">
-<meta name="twitter:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure1.jpg_mkitby">
+<meta name="twitter:image" content="http://mkitby.com/2015/11/09/raspberry-pi-nas-upnp-dlna/figure1.jpg">
 
 
 
@@ -536,9 +536,9 @@ mkdir /home/pi/nas-data/DLNA/{Music,Pictures,Videos,db,log}
 </code></pre><p>最后重启miniDLNA服务</p>
 <pre><code>sudo service minidlna restart
 </code></pre><p>打开计算机网络，可以看到RasPi DLNA Server媒体设备，如图Figure 1所示。同时如果是使用Windows 10（win7没有，win8没测试过），在我的电脑-&gt;网络位置还会显示RasPi DLNA Server，如图Figure 2所示,这一点配合WMP比较有用，正好弥补了WMP的不足，后面会有详细介绍。</p>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure1.jpg_mkitby" alt=""><br>Figure 1. 树莓派DLNA<br></div>
+<div align="center"><br><img src="/2015/11/09/raspberry-pi-nas-upnp-dlna/figure1.jpg" alt=""><br>Figure 1. 树莓派DLNA<br></div>
 
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure2.jpg_mkitby" alt=""><br>Figure 2. 网络位置DLNA Server<br></div>
+<div align="center"><br><img src="/2015/11/09/raspberry-pi-nas-upnp-dlna/figure2.jpg" alt=""><br>Figure 2. 网络位置DLNA Server<br></div>
 
 <h2 id="MP3中文名称乱码"><a href="#MP3中文名称乱码" class="headerlink" title="MP3中文名称乱码"></a>MP3中文名称乱码</h2><p>用Windows Media Player(后面用WMP替代)查看minidlna多媒体服务器文件，有些中文文件名显示乱码，有些就正常。目前Linux中流行的很多播放器经常不能正确显示如歌曲名、专辑名等MP3 tag信息，经过有些工具转换后，标签又不能被Windows识别。MP3的歌曲名、艺术家、专辑名等信息都以一定的编码格式存储在MP3标签中。简单地说，乱码出现的原因就是播放器未能准确识别出MP3标签的中文编码格式。</p>
 <p>具体的说，现在MP3文件的标签主要有几种标准：ID3v1、ID3v2（现在常见的又分为2.3和2.4）、APEv2。可以从两个角度解决这个问题。一是转换已有MP3文件的标签编码，二是使用支持GBK编码的播放软件,这种方案我没试过。</p>
@@ -560,7 +560,7 @@ git clone https://github.com/cxcxcxcx/mp3tagiconv.git
 <p>重启plex media server服务</p>
 <pre><code>sudo service plexmediaserver restart
 </code></pre><p>访问Plex Media Server WebGUI, 用浏览器访问<a href="http://192.168.1.118:32400/web" target="_blank" rel="external">http://192.168.1.118:32400/web</a>， 192.168.1.118为RPi的IP地址<br>大概会弹出一个对话框，在页面右上角（如图Figure 3）点agree，之后进入主页，</p>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure3.jpg_mkitby" alt=""><br>Figure 3. 主页右上角部分<br></div><br>然后点击页面右上角的扳手图标进入设置页面，如图Figure 4，点击右上角Web，然后在最左边选择General，先设置语言为中文，点最下面的SAVE CHANGES按钮，然后刷新，界面会马上切换为中文。<br><div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure4.jpg_mkitby" alt=""><br>Figure 4. 设置页面<br></div><br>这里面有很多设置选项，我也不一一讲，下面只列出我认为比较重要的设置，<br>1.    播放器设置，如图Figure 5，在这里面可以设置流媒体质量、分辨率、音量和字幕等，可以根据实际需要做修改，另外右上角可以打开高级选项，我暂时没有做任何改动，全部默认。<br><div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure5.jpg_mkitby" alt=""><br>Figure 5. 播放器设置界面<br></div><br>2.    服务器—&gt;资料库，勾选“自动更新我的资料库”和“定期更新我的媒体库”，如图Figure 6所示。<br><div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure6.jpg_mkitby" alt=""><br>Figure 6. 资料库设置<br></div><br>3. 最后讲如何添加多媒体资料，在主页左上角点击+号，或弹出如图Figure 7所示界面，然后就可以尽情添加你想要的资料了。<br><div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-upnp-dlna/figure7.jpg_mkitby" alt=""><br>Figure 7. 添加资料库<br></div>
+<div align="center"><br><img src="/2015/11/09/raspberry-pi-nas-upnp-dlna/figure3.jpg" alt=""><br>Figure 3. 主页右上角部分<br></div><br>然后点击页面右上角的扳手图标进入设置页面，如图Figure 4，点击右上角Web，然后在最左边选择General，先设置语言为中文，点最下面的SAVE CHANGES按钮，然后刷新，界面会马上切换为中文。<br><div align="center"><br><img src="/2015/11/09/raspberry-pi-nas-upnp-dlna/figure4.jpg" alt=""><br>Figure 4. 设置页面<br></div><br>这里面有很多设置选项，我也不一一讲，下面只列出我认为比较重要的设置，<br>1.    播放器设置，如图Figure 5，在这里面可以设置流媒体质量、分辨率、音量和字幕等，可以根据实际需要做修改，另外右上角可以打开高级选项，我暂时没有做任何改动，全部默认。<br><div align="center"><br><img src="/2015/11/09/raspberry-pi-nas-upnp-dlna/figure5.jpg" alt=""><br>Figure 5. 播放器设置界面<br></div><br>2.    服务器—&gt;资料库，勾选“自动更新我的资料库”和“定期更新我的媒体库”，如图Figure 6所示。<br><div align="center"><br><img src="/2015/11/09/raspberry-pi-nas-upnp-dlna/figure6.jpg" alt=""><br>Figure 6. 资料库设置<br></div><br>3. 最后讲如何添加多媒体资料，在主页左上角点击+号，或弹出如图Figure 7所示界面，然后就可以尽情添加你想要的资料了。<br><div align="center"><br><img src="/2015/11/09/raspberry-pi-nas-upnp-dlna/figure7.jpg" alt=""><br>Figure 7. 添加资料库<br></div>
 
 <h1 id="DLNA-client选择"><a href="#DLNA-client选择" class="headerlink" title="DLNA client选择"></a>DLNA client选择</h1><p>下面主要列出Windows，Android，IOS平台，我测试过的，其他平台linux，mac留给你们测了。</p>
 <h2 id="跨平台Kodi-XMBC"><a href="#跨平台Kodi-XMBC" class="headerlink" title="跨平台Kodi(XMBC)"></a>跨平台Kodi(XMBC)</h2><p>Kodi就是大名鼎鼎的XBMC，一款功能强大的重量级播放器，支持Windows, Linux, Mac OS, IOS, Android全平台。但是我认为这家伙最适合在大屏幕的播放设备，支持遥控器，作为家庭影院终端播放器比较多。手机，电脑我个人感觉操作不是很方便，必须要全屏。</p>
@@ -838,7 +838,7 @@ git clone https://github.com/cxcxcxcx/mp3tagiconv.git
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

@@ -95,18 +95,18 @@
 <meta property="og:url" content="http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/index.html">
 <meta property="og:site_name" content="mkitby's Blog">
 <meta property="og:description" content="安装操作系统在https://www.raspberrypi.org/downloads/ 下载Raspbian操作系统，下载完成后解压缩得到镜像文件(.img)，然后我们需要一个工具把镜像文件烧录到SD卡上， 我知道有两款工具，Win32DiskImager，USB Image Tool，另外这两款工具还可以备份整个SD卡为一个镜像文件。下面以Win32DiskImager为例说明如何烧录，如图">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure1.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure2.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure3.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure4.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure5.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure6.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure7.jpg_mkitby">
-<meta property="og:updated_time" content="2015-12-09T12:56:50.513Z">
+<meta property="og:image" content="http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/figure1.jpg">
+<meta property="og:image" content="http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/figure2.jpg">
+<meta property="og:image" content="http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/figure3.jpg">
+<meta property="og:image" content="http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/figure4.jpg">
+<meta property="og:image" content="http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/figure5.jpg">
+<meta property="og:image" content="http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/figure6.jpg">
+<meta property="og:image" content="http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/figure7.jpg">
+<meta property="og:updated_time" content="2019-03-17T06:19:52.217Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Raspberry Pi从零开始搭建低成本NAS(3)-系统安装">
 <meta name="twitter:description" content="安装操作系统在https://www.raspberrypi.org/downloads/ 下载Raspbian操作系统，下载完成后解压缩得到镜像文件(.img)，然后我们需要一个工具把镜像文件烧录到SD卡上， 我知道有两款工具，Win32DiskImager，USB Image Tool，另外这两款工具还可以备份整个SD卡为一个镜像文件。下面以Win32DiskImager为例说明如何烧录，如图">
-<meta name="twitter:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure1.jpg_mkitby">
+<meta name="twitter:image" content="http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/figure1.jpg">
 
 
 
@@ -460,27 +460,27 @@
 <li>点击Write按钮开始写入镜像文件，然后就是等待，完成后会弹出提示框</li>
 </ul>
 <a id="more"></a>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure1.jpg_mkitby" alt=""><br>Figure 1. Win32DiskImager烧录<br></div>
+<div align="center"><br><img src="/2015/11/05/raspberry-pi-nas-os-install/figure1.jpg" alt=""><br>Figure 1. Win32DiskImager烧录<br></div>
 
 <p>如何英文还可以，也可以直接参考官方文档：<br><a href="https://www.raspberrypi.org/documentation/installation/installing-images/windows.md" target="_blank" rel="external">https://www.raspberrypi.org/documentation/installation/installing-images/windows.md</a></p>
 <h1 id="登录SSH"><a href="#登录SSH" class="headerlink" title="登录SSH"></a>登录SSH</h1><p>把micro SD card 插入Raspberry Pi，插上网线，连到路由器，然后上电。由于我们没有键盘和显示器，所以需要用SSH登录RPi(Raspberry Pi缩写)，默认登陆用户名/密码：pi / raspberry。 但是不知道IP地址怎么办？其实我们可以从路由器设置里面得到IP地址。下面以TP-LINK为例，其他路由器类似。 进入路由器设置—&gt;DHCP服务器—&gt;客户端列表，就可以得到RPi的IP地址，如图Figure 2所示。然后最好绑定RPi的IP和MAC，进入路由器设置—&gt;DHCP服务器—&gt;静态地址保留，然后在设置里面，添加树莓派IP地址192.168.1.118和MAC地址。以后树莓派每次启动，IP地址都会固定为192.168.1.118。当然也可以设置RPi为静态IP地址，这个我们后面再讲。</p>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure2.jpg_mkitby" alt=""><br>Figure 2. 路由器设置界面<br></div>
+<div align="center"><br><img src="/2015/11/05/raspberry-pi-nas-os-install/figure2.jpg" alt=""><br>Figure 2. 路由器设置界面<br></div>
 
 <p>接下来用SSH客户端(Puty, SecureCRT, XShell等) 登录RPi，我这里以XShell(官网<a href="https://www.netsarang.com/" target="_blank" rel="external">https://www.netsarang.com/</a> )为例,</p>
 <ul>
 <li>先去官网下载安装</li>
 <li>运行XShell，会弹出会话对话框，如图Figure 3所示， 点击“新建”按钮，会弹出如图Figure 4所示对话框，“名称”输入Raspberry Pi(或者其它任何你想要的名字)，“主机”输入之前获得的IP地址，其它默认，点击确定，然后会回到如图Figure 3。</li>
 </ul>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure3.jpg_mkitby" alt=""><br>Figure 3. XShell运行开始界面<br></div>
+<div align="center"><br><img src="/2015/11/05/raspberry-pi-nas-os-install/figure3.jpg" alt=""><br>Figure 3. XShell运行开始界面<br></div>
 
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure4.jpg_mkitby" alt=""><br>Figure 4. 新建会话属性对话框<br></div>
+<div align="center"><br><img src="/2015/11/05/raspberry-pi-nas-os-install/figure4.jpg" alt=""><br>Figure 4. 新建会话属性对话框<br></div>
 
 <ul>
 <li>点击“连接”按钮，出现如图Figure 5所示界面， 输入pi，勾选“记住用户名”复选框，点击“确定”按钮，弹出如图Figure 6所示对话框，输入密码raspberry，勾选“记住密码”复选框，点击“确定”按钮。</li>
 </ul>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure5.jpg_mkitby" alt=""><br>Figure 5. SSH用户名<br></div>
+<div align="center"><br><img src="/2015/11/05/raspberry-pi-nas-os-install/figure5.jpg" alt=""><br>Figure 5. SSH用户名<br></div>
 
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure6.jpg_mkitby" alt=""><br>Figure 6. SSH用户身份验证<br></div>
+<div align="center"><br><img src="/2015/11/05/raspberry-pi-nas-os-install/figure6.jpg" alt=""><br>Figure 6. SSH用户身份验证<br></div>
 
 <ul>
 <li>以上所有步骤都没有问题的话，恭喜你，成功登录SSH。以后所有的操作基本上全是通过SSH来完成。</li>
@@ -494,7 +494,7 @@
 <li>选择Internationalisation Options—&gt;Change Timezone设置时区，在中国大陆，选择Asia—&gt;Chongqing(或者Hong_Kong)都可以</li>
 <li>按’Tab键，选中&lt;Finish&gt;，回车，提示Reboot(重启)，选&lt;Yes&gt;，回车，RPi就会重启，SSH会自动断开连接，然后重新连接SSH，记得输入你设置的新密码。</li>
 </ul>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-os-install/figure7.jpg_mkitby" alt=""><br>Figure 7. raspi-config命令配置界面<br></div>
+<div align="center"><br><img src="/2015/11/05/raspberry-pi-nas-os-install/figure7.jpg" alt=""><br>Figure 7. raspi-config命令配置界面<br></div>
 
 <p>其他一些选项，我反正是没设置，保持默认，想折腾的可以试试，比如Overclock(超频)。</p>
 <p>Tips :</p>
@@ -856,7 +856,7 @@ deb-src http://mirrors.aliyun.com/raspbian/raspbian/ wheezy main contrib non-fre
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

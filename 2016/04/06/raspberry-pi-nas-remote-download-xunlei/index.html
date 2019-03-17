@@ -95,15 +95,15 @@
 <meta property="og:url" content="http://mkitby.com/2016/04/06/raspberry-pi-nas-remote-download-xunlei/index.html">
 <meta property="og:site_name" content="mkitby's Blog">
 <meta property="og:description" content="接着之前aria2远程下载，来介绍迅雷远程下载。">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure1.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure2.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure3.jpg_mkitby">
-<meta property="og:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure4.jpg_mkitby">
-<meta property="og:updated_time" content="2016-04-08T13:31:13.166Z">
+<meta property="og:image" content="http://mkitby.com/2016/04/06/raspberry-pi-nas-remote-download-xunlei/figure1.jpg">
+<meta property="og:image" content="http://mkitby.com/2016/04/06/raspberry-pi-nas-remote-download-xunlei/figure2.jpg">
+<meta property="og:image" content="http://mkitby.com/2016/04/06/raspberry-pi-nas-remote-download-xunlei/figure3.jpg">
+<meta property="og:image" content="http://mkitby.com/2016/04/06/raspberry-pi-nas-remote-download-xunlei/figure4.jpg">
+<meta property="og:updated_time" content="2019-03-17T06:20:26.977Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Raspberry Pi从零开始搭建低成本NAS(8)-迅雷远程下载">
 <meta name="twitter:description" content="接着之前aria2远程下载，来介绍迅雷远程下载。">
-<meta name="twitter:image" content="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure1.jpg_mkitby">
+<meta name="twitter:image" content="http://mkitby.com/2016/04/06/raspberry-pi-nas-remote-download-xunlei/figure1.jpg">
 
 
 
@@ -473,19 +473,19 @@ sudo chmod -R 777 /home/pi/nas-data/xunlei
 </code></pre><p>如果提示权限不够，运行</p>
 <pre><code>sudo /home/pi/xunlei/portal
 </code></pre><p>运行结果如下图所示：</p>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure1.jpg_mkitby" alt=""><br></div>
+<div align="center"><br><img src="/2016/04/06/raspberry-pi-nas-remote-download-xunlei/figure1.jpg" alt=""><br></div>
 
 <p>牢记上面的Code，我的是qaefef。 在浏览器输入当前树莓派的IP：<a href="http://IP:9001/getsysinfo" target="_blank" rel="external">http://IP:9001/getsysinfo</a></p>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure2.jpg_mkitby" alt=""><br></div>
+<div align="center"><br><img src="/2016/04/06/raspberry-pi-nas-remote-download-xunlei/figure2.jpg" alt=""><br></div>
 
 <p>第一项：0表示返回结果成功<br>第二项： 1表示检测网络正常，0表示检测网络异常<br>第四项： 1表示已绑定成功，0表示未绑定<br>第五项： 未绑定的情况下，为绑定的需要的激活码   （这里获得的激活码呆会绑定要用，激活码不需要购买，ps迅雷远程下载不是破解的，是官方发布的）<br>第六项： 1表示磁盘挂载检测成功，0表示磁盘挂载检测失败<br>使用迅雷帐号登录迅雷远程下载页面<a href="http://yuancheng.xunlei.com，点【添加】，并填入激活码，点【确定】即绑定成功。当绑定成功后红色叉处即可解除绑定。" target="_blank" rel="external">http://yuancheng.xunlei.com，点【添加】，并填入激活码，点【确定】即绑定成功。当绑定成功后红色叉处即可解除绑定。</a><br>第九步，让我们绑定Pi设备到远程下载。<br>游览器访问<a href="http://yuancheng.xunlei.com，点击左上角的【添加】按钮，在弹出的对话框里面输入刚刚的激活码：qaefef，如下图：" target="_blank" rel="external">http://yuancheng.xunlei.com，点击左上角的【添加】按钮，在弹出的对话框里面输入刚刚的激活码：qaefef，如下图：</a></p>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure3.jpg_mkitby" alt=""><br></div>
+<div align="center"><br><img src="/2016/04/06/raspberry-pi-nas-remote-download-xunlei/figure3.jpg" alt=""><br></div>
 
 <p>第十步，保险起见，让我们再去把目录的权限再设置一下吧，因为已经生成了新的文件了</p>
 <pre><code>sudo chmod -R 777 /home/pi/xunlei
 sudo chmod -R 777 /home/pi/nas-data/xunlei
 </code></pre><p>第十一步，在<a href="http://yuancheng.xunlei.com里面新建个任务试试看。和一般的迅雷操作差不多的。注意下载器选择树莓派" target="_blank" rel="external">http://yuancheng.xunlei.com里面新建个任务试试看。和一般的迅雷操作差不多的。注意下载器选择树莓派</a></p>
-<div align="center"><br><img src="http://7xnzab.com1.z0.glb.clouddn.com/uploads/raspberry-pi/raspberry-pi-nas-remote-download-xunlei/figure4.jpg_mkitby" alt=""><br></div>
+<div align="center"><br><img src="/2016/04/06/raspberry-pi-nas-remote-download-xunlei/figure4.jpg" alt=""><br></div>
 
 <p>第十二步，下载的文件在哪里？<br>Xware软件会自动检测在机器上已经mount的，且有写入权限的设备，如果有，在远程下载页面中添加下载任务时就可以看到。如果有多个可写入的设备，那就依次编号为C、D、E…等，可以在添加下载任务时选择其中一个。</p>
 <pre><code>cd /home/pi/xunlei/TDDOWNLOAD
@@ -741,7 +741,7 @@ sudo chmod -R 777 /home/pi/nas-data/xunlei
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
