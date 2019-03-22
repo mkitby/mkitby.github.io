@@ -106,7 +106,7 @@
 
 在详细介绍这两种方案之前，我们需要先解决一个问题，如何获取树莓派外网（公网）IP地址？我们的树莓派一般处于路由器后面，外网不可见。">
 <meta property="og:image" content="http://mkitby.com/2016/04/07/raspberry-pi-nas-remote-management/figure1.jpg">
-<meta property="og:updated_time" content="2019-03-17T06:18:54.544Z">
+<meta property="og:updated_time" content="2019-03-22T11:35:17.165Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Raspberry Pi从零开始搭建低成本NAS(9)-外网登录树莓派">
 <meta name="twitter:description" content="有时候我们可能需要在外网环境下控制家里面的树莓派，根据实际网络情况，提供下面两个方案供选择。
@@ -483,7 +483,7 @@
 <h1 id="基于Web的SSH"><a href="#基于Web的SSH" class="headerlink" title="基于Web的SSH"></a>基于Web的SSH</h1><p>如果幸运，web端口没有被封，那么可以采用基于web的SSH，在任何有网络的地方，只需要浏览器就就可以搞定一切。基于web的SSH软件有很多，我也不一一介绍了，感兴趣的可以自己参考 ，下面我以shellinabox为例介绍，<br>先安装，</p>
 <pre><code>sudo apt-get install shellinabox -y
 </code></pre><p>然后编辑shellinabox配置文件</p>
-<pre><code>sudo vim /etc/default/shellinaboxd
+<pre><code>sudo vim /etc/default/shellinabox
 </code></pre><p>更改SHELLINABOX_PORT=4200，为想要的端口。</p>
 <pre><code># Should shellinaboxd start automatically
 SHELLINABOX_DAEMON_START=1

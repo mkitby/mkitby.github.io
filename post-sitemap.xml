@@ -7,6 +7,22 @@
     </url>
 
     <url>
+        <loc>http://mkitby.com/2016/04/07/raspberry-pi-nas-remote-management/</loc>
+        <lastmod>2019-03-22T11:35:17.165Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download-aria2/</loc>
+        <lastmod>2019-03-22T11:30:42.845Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://mkitby.com/2016/04/06/raspberry-pi-nas-remote-download-xunlei/</loc>
         <lastmod>2019-03-17T06:20:26.977Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -17,14 +33,6 @@
     <url>
         <loc>http://mkitby.com/2015/11/05/raspberry-pi-nas-os-install/</loc>
         <lastmod>2019-03-17T06:19:52.217Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://mkitby.com/2016/04/07/raspberry-pi-nas-remote-management/</loc>
-        <lastmod>2019-03-17T06:18:54.544Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -65,14 +73,6 @@
     <url>
         <loc>http://mkitby.com/2016/05/15/raspberry-pi-nas-manage-hdd-power/</loc>
         <lastmod>2016-05-15T08:29:49.470Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://mkitby.com/2016/01/15/raspberry-pi-nas-remote-download-aria2/</loc>
-        <lastmod>2016-04-11T12:24:59.558Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
